@@ -1,0 +1,87 @@
+{
+  "name": "ant-enhance",
+  "version": "1.0.0",
+  "description": "ant design enhance components",
+  "title": "Ant Enhance",
+  "keywords": [
+    "react",
+    "react-component",
+    "ant-design",
+    "antd",
+    "component",
+    "components",
+    "frontend"
+  ],
+  "author": "travonf",
+  "license": "MIT",
+  "homepage": "https://github.com/travonf/ant-enhance#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/travonf/ant-enhance.git",
+    "branch": "main"
+  },
+  "bugs": {
+    "url": "https://github.com/travonf/ant-enhance/issues"
+  },
+  "files": [
+    "dist",
+    "lib",
+    "es"
+  ],
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "typings": "lib/index.d.ts",
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "scripts": {
+    "start": "dumi dev",
+    "docs:build": "dumi build",
+    "docs:deploy": "gh-pages -d docs-dist",
+    "build": "father-build",
+    "deploy": "npm run docs:build && npm run docs:deploy",
+    "release": "npm run build && npm publish",
+    "prettier": "prettier --write \"**/*.{js,jsx,tsx,ts,less,md,json}\"",
+    "test": "umi-test",
+    "test:coverage": "umi-test --coverage"
+  },
+  "lint-staged": {
+    "*.{js,jsx,less,md,json}": [
+      "prettier --write"
+    ],
+    "*.ts?(x)": [
+      "prettier --parser=typescript --write"
+    ]
+  },
+  "dependencies": {
+    "@ant-design/icons": "^4.2.2",
+    "antd": "^4.7.2",
+    "moment": "^2.29.1",
+    "omit.js": "^2.0.2",
+    "ramda": "^0.27.1",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.15",
+    "@types/mockjs": "^1.0.3",
+    "@types/ramda": "^0.27.30",
+    "@umijs/fabric": "^2.3.1",
+    "@umijs/test": "^3.0.5",
+    "dumi": "^1.0.10",
+    "eslint": "^7.12.0",
+    "father-build": "^1.17.2",
+    "gh-pages": "^3.0.0",
+    "lint-staged": "^10.0.7",
+    "mockjs": "^1.1.0",
+    "prettier": "^1.19.1",
+    "yorkie": "^2.0.0"
+  },
+  "peerDependencies": {
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
+  }
+}

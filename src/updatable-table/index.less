@@ -1,0 +1,42 @@
+.ant-enhance-updatable-table {
+  // 控制整个滚动条
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  // 滚动条两端方向按钮
+  ::-webkit-scrollbar-button {
+    background-color: rgba(50, 50, 50, 0.1);
+  }
+
+  // 滚动条中间滑动部分
+  ::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    transition: all 2s ease;
+    background-color: rgba(50, 50, 50, 0.3);
+
+    &:hover {
+      background-color: rgba(50, 50, 50, 0.8);
+    }
+  }
+
+  // 滚动条滑道
+  ::-webkit-scrollbar-track {
+    border-radius: 1em;
+    background-color: rgba(50, 50, 50, 0.1);
+  }
+
+  ::-webkit-scrollbar-track-piece {
+    background-color: rgba(50, 50, 50, 0.1);
+  }
+
+  // 滚动条右下角区域
+  ::-webkit-scrollbar-corner {
+    background-color: rgba(50, 50, 50, 0.1);
+  }
+}
+
+.ant-enhance-updatable-table-detail-list-item {
+  min-width: 105px;
+}
