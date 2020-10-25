@@ -3,7 +3,7 @@ import moment from 'moment';
 import { __, find, join, map, compose } from 'ramda';
 import { Descriptions, Rate, Switch, Slider, Typography } from 'antd';
 import { PaperClipOutlined } from '@ant-design/icons';
-import { tag, flatTree, formatter, ItemOfOption, ItemToOption } from '@/utils';
+import { tag, flatTree, formatter, ItemOfOption, ItemToOption } from '../utils';
 import { IListProps, IColumnProps, DataEntry } from './typings';
 
 const ListItem = Descriptions.Item;

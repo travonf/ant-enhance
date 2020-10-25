@@ -3,7 +3,7 @@ import { Drawer, Modal, Form, Button, Popconfirm } from 'antd';
 import { DrawerProps } from 'antd/es/drawer';
 import { ModalProps } from 'antd/es/modal';
 import { DeleteOutlined, EditOutlined, ReadOutlined } from '@ant-design/icons';
-import { delay, localize } from '@/utils';
+import { delay, localize } from '../utils';
 import UpdateTable from './update-table';
 import DetailList from './detail-list';
 import UpdateForm from './update-form';

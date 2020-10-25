@@ -22,7 +22,7 @@ import {
   Typography,
   Upload,
 } from 'antd';
-import { omit } from '@/utils';
+import { omit } from '../utils';
 import { defaultLayout } from './layouts';
 import { IFormProps, IColumnProps, DataEntry, Option } from './typings';
 
