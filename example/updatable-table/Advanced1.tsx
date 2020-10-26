@@ -36,7 +36,7 @@ const columns: IColumnProps<IRecord>[] = [
     title: '输入',
     dataIndex: 'Input',
     ellipsis: true,
-    dataEntry: (record: IRecord, form: FormInstance<IRecord>) => ({
+    dataEntry: (record, form) => ({
       ComponentType: 'Input',
       placeholder: '请输入',
       /**

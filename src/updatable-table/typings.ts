@@ -37,9 +37,10 @@ export interface Option {
   label: string;
   value: string;
   disabled?: boolean;
+  color?: string;
 }
 
-export type IDataEntry<Props = any> =
+export type IDataEntry =
   /**
    * antd中全部输入组件的名称
    * https://ant.design/components/overview-cn/#数据录入
@@ -85,7 +86,7 @@ export type IDataEntry<Props = any> =
   /**
    * 自定义组件
    */
-  | ({ ComponentType: Function } & Props);
+  | { ComponentType: Function; [key: string]: any };
 
 export type DataEntryFn<T> = (record: T, form: FormInstance<T>) => IDataEntry;
 
@@ -123,7 +124,8 @@ export interface IColumnProps<T> extends ColumnProps<T> {
    */
   formItemProps?: FormItemProps<T> | FormItemPropsFn<T>;
   /**
-   * 输入项属性，根据type可选择antd中对应的组件属性
+   * 输入项属性，根据type可选择antd中对应的输入组件属性
+   * 也可以是自定义组件
    */
   dataEntry?: DataEntry<T>;
 }

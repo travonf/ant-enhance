@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import {
   Row,
@@ -56,7 +56,9 @@ export const defaultDataEntry: DataEntry<any> = {
  */
 function getInput<T>(DI: any, DE: DataEntry<T>, record: T, form: any) {
   const dataEntry = typeof DE === 'function' ? DE(record, form!) : DE;
-  const { ComponentType, options: opts = [], ...restProps } = dataEntry;
+  // @ts-ignore
+  const { ComponentType, options: opts = [] } = dataEntry;
+  const restProps = omit(dataEntry, ['ComponentType']);
   const options = typeof opts === 'function' ? opts(record) : opts;
 
   /**
@@ -70,7 +72,7 @@ function getInput<T>(DI: any, DE: DataEntry<T>, record: T, form: any) {
     return <ComponentType {...restProps} />;
   }
 
-  switch (ComponentType) {
+  switch (dataEntry.ComponentType) {
     /**
      * 排版
      */
@@ -90,7 +92,7 @@ function getInput<T>(DI: any, DE: DataEntry<T>, record: T, form: any) {
     case 'Input.TextArea':
       return <Input.TextArea {...restProps} />;
     case 'AutoComplete':
-      return <AutoComplete options={options} {...restProps} />;
+      return <AutoComplete {...restProps} options={options} />;
     case 'Mentions':
       return <Mentions {...restProps}>{options.map(itemToMention)}</Mentions>;
     /**
@@ -104,11 +106,11 @@ function getInput<T>(DI: any, DE: DataEntry<T>, record: T, form: any) {
       return <Slider {...restProps} />;
 
     case 'Radio':
-      return <Radio.Group options={options} {...restProps} />;
+      return <Radio.Group {...restProps} options={options} />;
     case 'Checkbox':
-      return <Checkbox.Group options={options} {...restProps} />;
+      return <Checkbox.Group {...restProps} options={options} />;
     case 'Cascader':
-      return <Cascader options={options} {...restProps} />;
+      return <Cascader {...restProps} options={options} />;
     case 'Select':
       return <Select {...restProps}>{options.map(itemToSelect)}</Select>;
     case 'TreeSelect':
@@ -167,6 +169,7 @@ function getValue<T>(DI: any, DE: DataEntry<T>, record: T, form: any) {
 }
 
 function UpdateForm<IRecord extends object = {}>(props: IFormProps<IRecord>) {
+  const [, forceUpdate] = useState<object>();
   const { form, columns = [], record = {} as IRecord, ...restProps } = props;
 
   useEffect(() => {
@@ -178,6 +181,11 @@ function UpdateForm<IRecord extends object = {}>(props: IFormProps<IRecord>) {
     }
     columns.forEach(setValue);
     form?.setFieldsValue(values);
+    forceUpdate({});
+
+    return () => {
+      form?.resetFields();
+    };
   }, [record]);
 
   const renderFormItem = (column: IColumnProps<IRecord>) => {
@@ -202,7 +210,7 @@ function UpdateForm<IRecord extends object = {}>(props: IFormProps<IRecord>) {
     const formItemProps = () => ({
       label: title,
       name: dataIndex,
-      rules: [{ required: true, message: `${title}是必填项!` }],
+      // rules: [{ required: true, message: `${title}是必填项!` }],
       ...omit(userFormItemPropsFn(record, form!), ['shouldUpdate', 'dependencies']),
     });
 
@@ -214,11 +222,11 @@ function UpdateForm<IRecord extends object = {}>(props: IFormProps<IRecord>) {
 
     return (
       <Col key={String(dataIndex)} {...layout.col}>
-        {!!shouldUpdate || !!dependencies ? (
+        {!!dependencies || !!shouldUpdate ? (
           <FormItem
             style={{ marginBottom: 0 }}
-            shouldUpdate={shouldUpdate}
             dependencies={dependencies}
+            shouldUpdate={shouldUpdate}
           >
             {formItem}
           </FormItem>

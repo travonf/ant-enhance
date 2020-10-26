@@ -1,6 +1,6 @@
 {
   "name": "ant-enhance",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "ant design enhance components",
   "title": "Ant Enhance",
   "keywords": [
@@ -42,6 +42,8 @@
     "docs:build": "dumi build",
     "docs:deploy": "gh-pages -d docs-dist",
     "build": "father-build",
+    "build:babel": "father-build --cjs babel --esm babel",
+    "build:rollup": "father-build --cjs rollup --esm rollup",
     "deploy": "npm run docs:build && npm run docs:deploy",
     "release": "npm run build && npm publish",
     "prettier": "prettier --write \"**/*.{js,jsx,tsx,ts,less,md,json}\"",

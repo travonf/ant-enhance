@@ -26,23 +26,25 @@ function getValue<T>(DI: any, DE: DataEntry<T>, record: T, list: any) {
   if (typeof dataValue === 'undefined') return null;
 
   const dataEntry = typeof DE === 'function' ? DE(record, list) : DE;
+  // @ts-ignore
   const { ComponentType, options: opts = [], ...restProps } = dataEntry;
   const options = typeof opts === 'function' ? opts(record) : opts;
-  switch (ComponentType) {
+
+  switch (dataEntry.ComponentType) {
     /**
      * 排版
      */
     case 'Text':
-      return <Text {...restProps}>{dataValue}</Text>;
+      return <Text {...(restProps as any)}>{dataValue}</Text>;
     case 'Link':
-      return <Link href={dataValue} {...restProps} />;
+      return <Link href={dataValue} {...(restProps as any)} />;
     case 'Paragraph':
-      return <Paragraph {...restProps}>{dataValue}</Paragraph>;
+      return <Paragraph {...(restProps as any)}>{dataValue}</Paragraph>;
     /**
      * 输入
      */
     case 'Input':
-      return <Text {...restProps}>{dataValue}</Text>;
+      return <Text {...(restProps as any)}>{dataValue}</Text>;
     case 'InputNumber':
       return dataValue;
     case 'Input.TextArea':
@@ -65,11 +67,11 @@ function getValue<T>(DI: any, DE: DataEntry<T>, record: T, list: any) {
      * 选择
      */
     case 'Switch':
-      return <Switch checked={dataValue} {...restProps} />;
+      return <Switch checked={dataValue} {...(restProps as any)} />;
     case 'Rate':
-      return <Rate value={dataValue} {...restProps} />;
+      return <Rate value={dataValue} {...(restProps as any)} />;
     case 'Slider':
-      return <Slider value={dataValue} {...restProps} />;
+      return <Slider value={dataValue} {...(restProps as any)} />;
 
     // find =
     case 'Radio':
@@ -89,17 +91,17 @@ function getValue<T>(DI: any, DE: DataEntry<T>, record: T, list: any) {
     case 'Select':
       // 单选
       // 多选
-      if (restProps.mode === 'multiple')
+      if ((restProps as any).mode === 'multiple')
         return dataValue.map(item => options.find(ItemOfOption(item))).map(tag);
       return dataValue;
     case 'TreeSelect':
       return dataValue
-        .map(item => flatTree(restProps.treeData).find(ItemOfOption(item) as any))
+        .map(item => flatTree((restProps as any).treeData).find(ItemOfOption(item) as any))
         .map(ItemToOption('title', 'value'))
         .map(tag);
     case 'Transfer':
       return dataValue
-        .map(item => restProps.dataSource.find(ItemOfOption(item, 'key')))
+        .map(item => (restProps as any).dataSource.find(ItemOfOption(item, 'key')))
         .map(ItemToOption('title', 'key'))
         .map(tag);
     /**

@@ -48,8 +48,7 @@ function UpdatableTable<IRecord extends object = {}>(props: IUpdatableTable<IRec
 
   const hide = (type: 'view' | 'edit') => {
     setVisible({ ...visible, [type]: false });
-    // if (type === 'edit') form.resetFields();
-    // setRecord(initialRecord);
+    setRecord(initialRecord);
   };
 
   const view = (record: IRecord) => {
@@ -71,8 +70,8 @@ function UpdatableTable<IRecord extends object = {}>(props: IUpdatableTable<IRec
     e.preventDefault();
     try {
       setSubmitting(true);
-      await delay(500);
       const values = await form.validateFields();
+      await delay(500);
       if (onUpdate) onUpdate(localize(values) as IRecord);
       hide('edit');
     } catch (errors) {

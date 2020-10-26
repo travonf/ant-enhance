@@ -9,7 +9,7 @@ import {
   UploadOutlined,
 } from '@ant-design/icons';
 import { IColumnProps } from 'ant-enhance/es/updatable-table';
-import { tag, flatTree, ItemOfOption, ItemToOption } from 'ant-enhance/es/utils';
+import { tag, flatTree, shouldUpdate, ItemOfOption, ItemToOption } from 'ant-enhance/es/utils';
 import { fullLayout, halfLayout } from './layouts';
 import { OPTIONS, LABEL_TREE, TITLE_TREE, TRANSFER_DATA } from './options';
 import { IRecord } from './typings';
@@ -180,7 +180,8 @@ const columns: IColumnProps<IRecord>[] = [
       };
     },
     formItemProps: {
-      shouldUpdate: (prev, curr) => prev.Switch !== curr.Switch,
+      // dependencies: ['Switch'],
+      shouldUpdate: shouldUpdate('Switch'),
     },
     listItemProps: {
       span: 2,
