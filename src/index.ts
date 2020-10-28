@@ -1,4 +1,3 @@
-export { default as UpdatableTable } from './updatable-table';
-export { DetailList } from './updatable-table';
-export { UpdateForm } from './updatable-table';
-export { UpdateTable } from './updatable-table';
+export { default as AdvancedTable } from './advanced-table';
+export { DetailList, UpdateForm, UpdateTable } from './advanced-table';
+export { default as EditableTable } from './editable-table';

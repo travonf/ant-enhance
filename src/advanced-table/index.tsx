@@ -7,10 +7,10 @@ import { delay, localize } from '../utils';
 import UpdateTable from './update-table';
 import DetailList from './detail-list';
 import UpdateForm from './update-form';
-import { IUpdatableTable, IColumnProps } from './typings';
+import { IAdvancedTable, IColumnProps } from './typings';
 import './index.less';
 
-function UpdatableTable<IRecord extends object = {}>(props: IUpdatableTable<IRecord>) {
+function AdvancedTable<IRecord extends object = {}>(props: IAdvancedTable<IRecord>) {
   const {
     wrapper = {},
     columns: userColumns = [],
@@ -174,7 +174,7 @@ function UpdatableTable<IRecord extends object = {}>(props: IUpdatableTable<IRec
   );
 
   return (
-    <div className="ant-enhance-updatable-table">
+    <div className="ant-enhance-advanced-table">
       <UpdateTable<IRecord>
         {...restProps}
         columns={columns.filter(({ hideInTable }) => !hideInTable)}
@@ -245,6 +245,6 @@ function UpdatableTable<IRecord extends object = {}>(props: IUpdatableTable<IRec
   );
 }
 
-export default UpdatableTable;
+export default AdvancedTable;
 export { UpdateTable, DetailList, UpdateForm, IColumnProps };
 export { ITableProps, IListProps, IFormProps } from './typings';

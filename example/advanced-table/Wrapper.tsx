@@ -1,12 +1,12 @@
 /**
- * title: 基本用法
- * desc: 像 antd Table 那样使用，提供 columns 及 dataSource，支持 antd table 其他属性
+ * title: 表单容器
+ * desc: 弹出表单的容器支持抽屉和模态框两种形式，默认为抽屉。当然也可以自定义容器标题和宽度。
  */
 import React from 'react';
 import moment from 'moment';
 import { message } from 'antd';
-import { UpdatableTable as Table } from 'ant-enhance';
-import { IColumnProps } from 'ant-enhance/es/updatable-table';
+import { AdvancedTable as Table } from 'ant-enhance';
+import { IColumnProps } from 'ant-enhance/es/advanced-table';
 import { delay } from 'ant-enhance/es/utils';
 import { IRecord } from './typings';
 import { getData } from './services';
@@ -86,21 +86,24 @@ export default () => {
 
   return (
     <Table
+      wrapper={{
+        edit: {
+          type: 'Modal',
+          title: '正在编辑中，完成后记得提交!!!',
+          width: '60vw',
+        },
+      }}
       rowKey="id"
       columns={columns}
       loading={loading}
       dataSource={value}
       pagination={false}
-      onUpdate={async (values: IRecord) => {
+      onUpdate={(values: IRecord) => {
         console.log(values);
-        message.loading('正在更新');
-        await delay(1000);
-        message.success('正在更新');
+        message.success('提交成功');
       }}
-      onDelete={async (values: IRecord) => {
+      onDelete={(values: IRecord) => {
         console.log(values);
-        message.loading('正在删除');
-        await delay(1000);
         message.success('提交成功');
       }}
     />

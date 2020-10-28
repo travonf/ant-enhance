@@ -1,3 +1,5 @@
+![ant-enhance](./public/images/design_components.png)
+
 # 简介
 
 通过在 antd Table 的基础上扩展了一些属性，附带一个编辑功能的弹出表单，从而简化用户代码编写。你需要自己管理数据源的获取

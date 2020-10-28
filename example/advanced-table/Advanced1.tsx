@@ -1,43 +1,29 @@
 /**
- * title: 表单布局
- * desc: 你可以自定义弹出表单中表单项的布局，通过layout配置 Col 及 formItem 的布局属性，支持响应式写法。
+ * title: 主动联动
+ * desc: 通过调用form方法动态更改联动字段
  */
 import React from 'react';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import { message } from 'antd';
-import { UpdatableTable as Table } from 'ant-enhance';
-import { IColumnProps } from 'ant-enhance/es/updatable-table';
+import { FormInstance } from 'antd/lib/form';
+import { AdvancedTable as Table } from 'ant-enhance';
+import { IColumnProps } from 'ant-enhance/es/advanced-table';
 import { delay } from 'ant-enhance/es/utils';
 import { IRecord } from './typings';
 import { getData } from './services';
 
-const layout = {
-  col: {
-    lg: 0x18,
-    xl: 0x0c,
-  },
-  formItem: {
-    labelCol: {
-      lg: 0x06,
-    },
-    wrapperCol: {
-      lg: 0x12,
-    },
-  },
-};
 const columns: IColumnProps<IRecord>[] = [
   {
     title: '文本',
     dataIndex: 'Text',
     ellipsis: true,
-    layout,
     dataEntry: {
       /**
        * https://ant.design/components/typography-cn/#Typography.Text
        */
       ComponentType: 'Text',
       copyable: true,
-      ellipsis: false,
+      ellipsis: true,
       underline: true,
       strong: true,
       type: 'success',
@@ -50,18 +36,24 @@ const columns: IColumnProps<IRecord>[] = [
     title: '输入',
     dataIndex: 'Input',
     ellipsis: true,
-    layout,
-    dataEntry: {
+    dataEntry: (record, form) => ({
       ComponentType: 'Input',
       placeholder: '请输入',
-    },
+      /**
+       * 表单联动
+       * 演示如何控制文本字段
+       */
+      onChange: (e: React.FormEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        form.setFieldsValue({ Text: e.currentTarget.value });
+      },
+    }),
   },
   {
     title: '选项',
     dataIndex: 'Select',
-    layout,
     ellipsis: true,
-    dataEntry: {
+    dataEntry: (record: IRecord, form: FormInstance<IRecord>) => ({
       ComponentType: 'Select',
       mode: 'multiple',
       options: [
@@ -71,19 +63,35 @@ const columns: IColumnProps<IRecord>[] = [
         { label: '选项四', value: '4', disabled: false },
         { label: '选项五', value: '5', disabled: false },
       ],
-    },
+      /**
+       * 表单联动
+       * 演示如何控制文本字段
+       */
+      onChange: (value: string, option: { label: string; value: string; disabled?: boolean }) => {
+        form.setFieldsValue({ Text: value });
+      },
+    }),
     render: (text: string[]) => text && text.join(', '),
   },
   {
     title: '日期',
     dataIndex: 'DatePicker',
     ellipsis: true,
-    layout,
-    dataEntry: {
+    dataEntry: (record: IRecord, form: FormInstance<IRecord>) => ({
       ComponentType: 'DatePicker',
       style: { width: '100%' },
       showTime: true,
-    },
+      /**
+       * 表单联动
+       * 演示如何控制文本字段
+       */
+      onChange: (date: Moment, dateString: string) => {
+        form.setFieldsValue({
+          // 这里要将时间序列化
+          Text: moment(date).format('YYYY-MM-DD HH:mm:ss'),
+        });
+      },
+    }),
     render: (text: string) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
   },
 ];

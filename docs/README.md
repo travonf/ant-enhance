@@ -1,14 +1,6 @@
-# 简介
+![ant-enhance](/images/design_components.png)
 
-通过在 antd Table 的基础上扩展了一些属性，附带一个编辑功能的弹出表单，从而简化用户代码编写。你需要自己管理数据源的获取
-
-## 特性
-
-- 兼容 antd 全部的数据录入组件
-- 全面拥抱 typescript，支持类型定义，极大的提升了开发体验
-- 高度可配置化，包括静态配置，动态配置（通过控制反转实现）
-  - 表单联动，某个字段改变控制其他字段变化
-- 自动处理数据，无需手动序列化 moment 格式的日期
+# Ant Enhance
 
 ## 安装
 
@@ -20,44 +12,181 @@ $ yarn add ant-enhance
 
 ## 使用
 
-<code src="../example/updatable-table/FullDisplay.tsx" title="能力展示" />
+## 高级表格
 
-## 配置
+```jsx
+import React from 'react';
+import { AdvancedTable } from 'ant-enhance';
+import { ItemOfOption } from 'ant-enhance/es/utils';
 
-以下只列出与 antd Table 不同的属性，其余的参考 antd 官方文档
+const options = [
+  { label: '选项一', value: '1' },
+  { label: '选项二', value: '2' },
+  { label: '选项三', value: '3' },
+];
 
-### Table
-
-```typescript
-wrapper?: {
-  type?: 'Drawer' | 'Modal';
-  title?: any;
-  width?: any;
-}
+export default () => (
+  <AdvancedTable
+    columns={[
+      {
+        title: '文本',
+        dataIndex: 'text',
+        dataEntry: {
+          ComponentType: 'Input',
+        },
+      },
+      {
+        title: '选项',
+        dataIndex: 'select',
+        dataEntry: {
+          ComponentType: 'Select',
+          options,
+        },
+        render: text =>
+          options
+            .filter(ItemOfOption(text))
+            .map(item => item.label)
+            .join(', '),
+      },
+    ]}
+    dataSource={[
+      { key: 1, text: '标题一', select: '1' },
+      { key: 2, text: '标题二', select: '2' },
+      { key: 3, text: '标题三', select: '3' },
+    ]}
+    pagination={false}
+  />
+);
 ```
 
-### Column
+## 详情列表
 
-```typescript
-/**
- * 是否渲染
- */
-hideInTable?: boolean;
-hideInForm?: boolean;
-/**
- * 布局
- */
-layout?: {
-   col: {},
-   formItem: { labelCol: {}, wrapperCol: {} }
-};
-/**
- * 额外属性
- */
-formItemProps?: FormItemProps
-/**
- * 核心属性
- * 弹出表单根据此配置渲染输入组件
- */
-dataEntry?: DataEntry | DataEntryFn<T>;
+> 高级表格的子组件，可以单独使用
+
+```jsx
+import React from 'react';
+import { DetailList } from 'ant-enhance';
+import { ItemOfOption } from 'ant-enhance/es/utils';
+
+const options = [
+  { label: '选项一', value: '1' },
+  { label: '选项二', value: '2' },
+  { label: '选项三', value: '3' },
+];
+
+export default () => (
+  <DetailList
+    bordered={false}
+    columns={[
+      {
+        title: '文本',
+        dataIndex: 'text',
+        dataEntry: {
+          ComponentType: 'Input',
+        },
+      },
+      {
+        title: '选项',
+        dataIndex: 'select',
+        dataEntry: {
+          ComponentType: 'Select',
+          options,
+        },
+        render: text =>
+          options
+            .filter(ItemOfOption(text))
+            .map(item => item.label)
+            .join(', '),
+      },
+    ]}
+    record={{ key: 1, text: '标题一', select: '1' }}
+  />
+);
+```
+
+## 更新表单
+
+> 高级表格的子组件，可以单独使用
+
+```jsx
+import React from 'react';
+import { UpdateForm } from 'ant-enhance';
+
+const options = [
+  { label: '选项一', value: '1' },
+  { label: '选项二', value: '2' },
+  { label: '选项三', value: '3' },
+];
+
+export default () => (
+  <UpdateForm
+    columns={[
+      {
+        title: '文本',
+        dataIndex: 'text',
+        dataEntry: {
+          ComponentType: 'Input',
+          placeholder: '请输入一些内容',
+        },
+      },
+      {
+        title: '选项',
+        dataIndex: 'select',
+        dataEntry: {
+          ComponentType: 'Select',
+          placeholder: '请选择一个选项',
+          options,
+        },
+        render: text =>
+          options
+            .filter(ItemOfOption(text))
+            .map(item => item.label)
+            .join(', '),
+      },
+    ]}
+    record={{ key: 1, text: '标题一', select: '1' }}
+  />
+);
+```
+
+## 编辑表格
+
+> 可以作为更新表单的扩展输入组件，可以单独使用
+
+```jsx
+import React from 'react';
+import { EditableTable } from 'ant-enhance';
+import { ItemOfOption } from 'ant-enhance/es/utils';
+
+const options = [
+  { label: '选项一', value: '1' },
+  { label: '选项二', value: '2' },
+  { label: '选项三', value: '3' },
+];
+
+export default () => (
+  <EditableTable
+    columns={[
+      {
+        title: '文本',
+        dataIndex: 'text',
+      },
+      {
+        title: '选项',
+        dataIndex: 'select',
+        render: text =>
+          options
+            .filter(ItemOfOption(text))
+            .map(item => item.label)
+            .join(', '),
+      },
+    ]}
+    dataSource={[
+      { key: 1, text: '标题一', select: '1' },
+      { key: 2, text: '标题二', select: '2' },
+      { key: 3, text: '标题三', select: '3' },
+    ]}
+    pagination={false}
+  />
+);
 ```

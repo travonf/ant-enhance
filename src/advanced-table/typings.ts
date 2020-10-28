@@ -168,7 +168,7 @@ type Wrapper = {
 };
 type WrapperFn<T> = (record: T) => Wrapper;
 
-export interface IUpdatableTable<T> extends ITableProps<T> {
+export interface IAdvancedTable<T> extends ITableProps<T> {
   /**
    * 弹出表单的容器
    */

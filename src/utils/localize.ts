@@ -19,6 +19,9 @@ function localize(obj: Type): Type {
     if (val instanceof moment) {
       // 如果是moment则格式化
       out[key] = formatter(val as Moment);
+      // eslint-disable-next-line no-underscore-dangle
+    } else if ((val as any)?._isAMomentObject) {
+      out[key] = formatter(val as Moment);
     } else if (Object.prototype.toString.call(val) === '[object Object]') {
       // 如果是对象则深度递归
       out[key] = localize(val as Type);

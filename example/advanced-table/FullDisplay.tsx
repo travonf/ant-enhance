@@ -4,7 +4,7 @@
  */
 import React, { useState, useEffect } from 'react';
 import { message } from 'antd';
-import { UpdatableTable as Table } from 'ant-enhance';
+import { AdvancedTable as Table } from 'ant-enhance';
 import { delay } from 'ant-enhance/es/utils';
 import { IRecord } from './typings';
 import { getData } from './services';
@@ -35,7 +35,7 @@ const App: React.FC<any> = () => {
             width: '80vw',
           },
           edit: {
-            type: 'Drawer',
+            type: 'Modal',
             title: record.Text,
             width: '60vw',
           },

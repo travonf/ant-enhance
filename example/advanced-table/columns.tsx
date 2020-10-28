@@ -8,7 +8,8 @@ import {
   InfoCircleOutlined,
   UploadOutlined,
 } from '@ant-design/icons';
-import { IColumnProps } from 'ant-enhance/es/updatable-table';
+import { EditableTable } from 'ant-enhance';
+import { IColumnProps } from 'ant-enhance/es/advanced-table';
 import { tag, flatTree, shouldUpdate, ItemOfOption, ItemToOption } from 'ant-enhance/es/utils';
 import { fullLayout, halfLayout } from './layouts';
 import { OPTIONS, LABEL_TREE, TITLE_TREE, TRANSFER_DATA } from './options';
@@ -186,7 +187,7 @@ const columns: IColumnProps<IRecord>[] = [
     listItemProps: {
       span: 2,
     },
-    hideInTable: true,
+    hideInTable: false,
     render: (text: string) => (
       <pre
         style={{
@@ -572,58 +573,59 @@ const columns: IColumnProps<IRecord>[] = [
   /**
    * 自定义组件
    */
-  // {
-  //   title: '表格',
-  //   dataIndex: 'Table',
-  //   width: 300,
-  //   dataEntry: {
-  //     /**
-  //      * 自定义组件
-  //      * 这里演示了如何传入外部组件
-  //      */
-  //     ComponentType: EditableTable,
-  //     rowKey: 'uid',
-  //     columns: [
-  //       {
-  //         title: '#',
-  //         dataIndex: 'uid',
-  //       },
-  //       {
-  //         title: '文件名',
-  //         dataIndex: 'name',
-  //         editable: true,
-  //         dataEntry: { type: 'Input' },
-  //       },
-  //       {
-  //         title: '状态',
-  //         dataIndex: 'status',
-  //         editable: true,
-  //         dataEntry: { type: 'Input' },
-  //       },
-  //       {
-  //         title: 'url',
-  //         dataIndex: 'url',
-  //         editable: true,
-  //         dataEntry: { type: 'Input' },
-  //       },
-  //     ],
-  //     pagination: false,
-  //   },
-  //   formItemProps: {
-  //     valuePropName: 'dataSource',
-  //   },
-  //   render: (text: any[]) => (
-  //     <pre
-  //       style={{
-  //         margin: 0,
-  //         height: 200,
-  //         overflow: 'auto',
-  //       }}
-  //     >
-  //       {JSON.stringify(text, null, 2)}
-  //     </pre>
-  //   ),
-  // },
+  {
+    title: '表格',
+    dataIndex: 'Table',
+    hideInTable: true,
+    layout: fullLayout,
+    dataEntry: {
+      /**
+       * 自定义组件
+       * 这里演示了如何传入外部组件
+       */
+      ComponentType: EditableTable,
+      rowKey: 'uid',
+      columns: [
+        {
+          title: '#',
+          dataIndex: 'uid',
+        },
+        {
+          title: '文件名',
+          dataIndex: 'name',
+          editable: true,
+          dataEntry: { type: 'Input' },
+        },
+        {
+          title: '状态',
+          dataIndex: 'status',
+          editable: true,
+          dataEntry: { type: 'Input' },
+        },
+        {
+          title: 'url',
+          dataIndex: 'url',
+          editable: true,
+          dataEntry: { type: 'Input' },
+        },
+      ],
+      pagination: false,
+    },
+    formItemProps: {
+      valuePropName: 'dataSource',
+    },
+    render: (text: any[]) => (
+      <pre
+        style={{
+          margin: 0,
+          height: 200,
+          overflow: 'auto',
+        }}
+      >
+        {JSON.stringify(text, null, 2)}
+      </pre>
+    ),
+  },
   {
     title: '操作',
     key: '__OPERATIONS__',

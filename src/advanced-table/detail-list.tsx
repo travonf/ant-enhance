@@ -152,7 +152,7 @@ function DetailList<IRecord extends object = {}>(props: IListProps<IRecord>) {
       <ListItem
         key={title as any}
         label={title}
-        className="ant-enhance-updatable-table-detail-list-item"
+        className="ant-enhance-advanced-table-detail-list-item"
         {...listItemProps}
       >
         {getValue(dataIndex, dataEntry, record, list)}
