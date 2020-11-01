@@ -24,6 +24,7 @@ const columns: IColumnProps<IRecord>[] = [
     dataIndex: 'Text',
     width: 160,
     ellipsis: true,
+    hideInSearch: false,
     layout: halfLayout,
     dataEntry: {
       /**
@@ -52,6 +53,7 @@ const columns: IColumnProps<IRecord>[] = [
     dataIndex: 'Link',
     width: 160,
     ellipsis: true,
+    hideInSearch: true,
     layout: halfLayout,
     dataEntry: {
       /**
@@ -70,6 +72,7 @@ const columns: IColumnProps<IRecord>[] = [
     dataIndex: 'Paragraph',
     width: 200,
     ellipsis: true,
+    hideInSearch: true,
     layout: fullLayout,
     dataEntry: {
       /**
@@ -109,6 +112,7 @@ const columns: IColumnProps<IRecord>[] = [
     title: '数字输入',
     dataIndex: 'InputNumber',
     align: 'right',
+    hideInSearch: true,
     layout: halfLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -125,6 +129,7 @@ const columns: IColumnProps<IRecord>[] = [
     title: '文本输入',
     dataIndex: 'Input',
     ellipsis: true,
+    hideInSearch: false,
     layout: halfLayout,
     dataEntry: (record, form) => ({
       // placeholder: '请输入',
@@ -141,6 +146,7 @@ const columns: IColumnProps<IRecord>[] = [
   {
     title: '自动完成',
     dataIndex: 'AutoComplete',
+    hideInSearch: true,
     layout: halfLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -152,6 +158,7 @@ const columns: IColumnProps<IRecord>[] = [
     title: '提及',
     dataIndex: 'Mentions',
     ellipsis: true,
+    hideInSearch: true,
     layout: halfLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -165,6 +172,7 @@ const columns: IColumnProps<IRecord>[] = [
     dataIndex: 'TextArea',
     width: 600,
     ellipsis: true,
+    hideInSearch: true,
     layout: fullLayout,
     dataEntry: (record, form) => {
       return {
@@ -208,6 +216,7 @@ const columns: IColumnProps<IRecord>[] = [
     dataIndex: 'Switch',
     width: 60,
     align: 'center',
+    hideInSearch: true,
     layout: halfLayout,
     dataEntry: (record, form) => ({
       // placeholder: '请输入',
@@ -230,6 +239,7 @@ const columns: IColumnProps<IRecord>[] = [
     title: '评分',
     dataIndex: 'Rate',
     width: 180,
+    hideInSearch: true,
     layout: halfLayout,
     dataEntry: (record, form) => ({
       // placeholder: '请输入',
@@ -262,6 +272,7 @@ const columns: IColumnProps<IRecord>[] = [
     title: '滑块',
     dataIndex: 'Slider',
     width: 200,
+    hideInSearch: true,
     layout: fullLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -278,6 +289,7 @@ const columns: IColumnProps<IRecord>[] = [
     dataIndex: 'Radio',
     width: 84,
     filters: OPTIONS.map(({ label, value }) => ({ text: label, value })),
+    hideInSearch: true,
     layout: halfLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -291,6 +303,7 @@ const columns: IColumnProps<IRecord>[] = [
     dataIndex: 'Checkbox',
     width: 332,
     filters: OPTIONS.map(({ label, value }) => ({ text: label, value })),
+    hideInSearch: true,
     layout: halfLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -305,6 +318,7 @@ const columns: IColumnProps<IRecord>[] = [
     dataIndex: 'Select',
     width: 212,
     filters: OPTIONS.map(({ label, value }) => ({ text: label, value })),
+    hideInSearch: true,
     layout: halfLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -320,6 +334,7 @@ const columns: IColumnProps<IRecord>[] = [
     dataIndex: 'Transfer',
     width: 269,
     filters: TRANSFER_DATA.map(({ title, key, ...rest }) => ({ text: title, value: key, ...rest })),
+    hideInSearch: true,
     layout: fullLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -335,6 +350,7 @@ const columns: IColumnProps<IRecord>[] = [
     render: (text: string[]) =>
       (text || [])
         .map(item => TRANSFER_DATA.find(({ key }) => key === item))
+        // @ts-ignore
         .map(({ title, key, ...rest }) => ({ label: title, value: key, ...rest }))
         .map(tag),
   },
@@ -342,6 +358,7 @@ const columns: IColumnProps<IRecord>[] = [
     title: '级联选择',
     dataIndex: 'Cascader',
     width: 230,
+    hideInSearch: true,
     layout: halfLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -356,6 +373,7 @@ const columns: IColumnProps<IRecord>[] = [
     title: '树选择',
     dataIndex: 'TreeSelect',
     width: 230,
+    hideInSearch: true,
     layout: fullLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -378,6 +396,7 @@ const columns: IColumnProps<IRecord>[] = [
   {
     title: '日期',
     dataIndex: 'DatePicker',
+    hideInSearch: true,
     layout: halfLayout,
     dataEntry: (record, form) => ({
       // placeholder: '请输入',
@@ -402,6 +421,7 @@ const columns: IColumnProps<IRecord>[] = [
   {
     title: '年份',
     dataIndex: 'YearPicker',
+    hideInSearch: true,
     layout: halfLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -414,6 +434,7 @@ const columns: IColumnProps<IRecord>[] = [
   {
     title: '季度',
     dataIndex: 'QuarterPicker',
+    hideInSearch: true,
     layout: halfLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -426,6 +447,7 @@ const columns: IColumnProps<IRecord>[] = [
   {
     title: '月份',
     dataIndex: 'MonthPicker',
+    hideInSearch: true,
     layout: halfLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -438,6 +460,7 @@ const columns: IColumnProps<IRecord>[] = [
   {
     title: '星期',
     dataIndex: 'WeekPicker',
+    hideInSearch: true,
     layout: halfLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -450,6 +473,7 @@ const columns: IColumnProps<IRecord>[] = [
   {
     title: '时间',
     dataIndex: 'TimePicker',
+    hideInSearch: true,
     layout: halfLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -463,6 +487,7 @@ const columns: IColumnProps<IRecord>[] = [
     dataIndex: 'DateRangePicker',
     width: 120,
     align: 'center',
+    hideInSearch: true,
     layout: halfLayout,
     dataEntry: {
       // placeholder: ['请输入', '请输入'],
@@ -482,6 +507,7 @@ const columns: IColumnProps<IRecord>[] = [
     width: 180,
     align: 'center',
     layout: halfLayout,
+    hideInSearch: true,
     dataEntry: {
       // placeholder: ['请输入', '请输入'],
       ComponentType: 'RangePicker',
@@ -498,6 +524,7 @@ const columns: IColumnProps<IRecord>[] = [
     dataIndex: 'Upload',
     ellipsis: true,
     layout: halfLayout,
+    hideInSearch: true,
     dataEntry: {
       ComponentType: 'Upload',
       children: <Button icon={<UploadOutlined />}>点击上传</Button>,
@@ -530,6 +557,7 @@ const columns: IColumnProps<IRecord>[] = [
     title: '拖拽上传',
     dataIndex: 'Dragger',
     ellipsis: true,
+    hideInSearch: true,
     layout: fullLayout,
     dataEntry: {
       ComponentType: 'Upload.Dragger',
@@ -577,6 +605,7 @@ const columns: IColumnProps<IRecord>[] = [
     title: '表格',
     dataIndex: 'Table',
     hideInTable: true,
+    hideInSearch: true,
     layout: fullLayout,
     dataEntry: {
       /**
@@ -632,6 +661,7 @@ const columns: IColumnProps<IRecord>[] = [
     width: 160,
     align: 'center',
     fixed: 'right',
+    hideInSearch: true,
     hideInList: true,
     hideInForm: true,
     render: (text, record) => [

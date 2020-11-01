@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { Button, Popconfirm } from 'antd';
 
 function DataOperation(props: IProps) {
@@ -23,27 +23,27 @@ function DataOperation(props: IProps) {
   );
 }
 
-DataOperation.propTypes = {
-  type: PropTypes.string,
-  icon: PropTypes.node,
-  confirm: PropTypes.bool,
-  onClick: PropTypes.func.isRequired,
-  children: PropTypes.node,
-};
-
-DataOperation.defaultProps = {
-  type: 'primary',
-  icon: null,
-  confirm: false,
-  children: '',
-};
+// DataOperation.propTypes = {
+//   type: PropTypes.string,
+//   icon: PropTypes.node,
+//   confirm: PropTypes.bool,
+//   onClick: PropTypes.func.isRequired,
+//   children: PropTypes.node,
+// };
+//
+// DataOperation.defaultProps = {
+//   type: 'primary',
+//   icon: null,
+//   confirm: false,
+//   children: '',
+// };
 
 export default DataOperation;
 
 interface IProps {
   disabled: boolean;
   type: 'default' | 'primary' | 'ghost' | 'dashed' | 'link';
-  icon: string;
+  icon?: string;
   confirm: boolean;
   onClick: (e?: React.MouseEvent<HTMLElement>) => void;
   children: React.ReactNode;

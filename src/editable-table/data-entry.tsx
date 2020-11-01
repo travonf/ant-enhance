@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
 import moment from 'moment';
 import { UploadOutlined } from '@ant-design/icons';

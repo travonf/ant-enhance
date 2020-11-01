@@ -1,6 +1,7 @@
 /**
  * title: 能力展示
  * desc: 演示基础功能、高级功能，早点回家吃饭。
+ * background: '#f6f7f9'
  */
 import React, { useState, useEffect } from 'react';
 import { message } from 'antd';

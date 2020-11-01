@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Drawer, Modal, Form, Button, Popconfirm } from 'antd';
+import { Card, Drawer, Modal, Form, Button, Popconfirm } from 'antd';
 import { DrawerProps } from 'antd/es/drawer';
 import { ModalProps } from 'antd/es/modal';
 import { DeleteOutlined, EditOutlined, ReadOutlined } from '@ant-design/icons';
 import { delay, localize } from '../utils';
 import UpdateTable from './update-table';
+import SearchForm from './search-form';
 import DetailList from './detail-list';
 import UpdateForm from './update-form';
 import { IAdvancedTable, IColumnProps } from './typings';
@@ -134,6 +135,9 @@ function AdvancedTable<IRecord extends object = {}>(props: IAdvancedTable<IRecor
     width: 128,
     align: 'center',
     fixed: 'right',
+    hideInSearch: true,
+    hideInList: true,
+    hideInForm: true,
     render: (text, record) => ['<detail>', '<update>', '<delete>'],
   };
   const KEY_EQ_OPERATIONS = ({ key }: IColumnProps<IRecord>) => key === '__OPERATIONS__';
@@ -149,6 +153,15 @@ function AdvancedTable<IRecord extends object = {}>(props: IAdvancedTable<IRecor
         : (dfltOperations.render!(text, record, index) as any[]).map(itemToAction(record)),
   };
   const columns = userColumns.filter(KEY_NE_OPERATIONS).concat(operations);
+
+  const searchForm = (
+    <SearchForm<IRecord>
+      form={form}
+      columns={userColumns.filter(({ hideInSearch }) => !hideInSearch)}
+      record={record}
+      {...updateFormProps}
+    />
+  );
 
   const detailList = (
     <DetailList<IRecord>
@@ -175,10 +188,18 @@ function AdvancedTable<IRecord extends object = {}>(props: IAdvancedTable<IRecor
 
   return (
     <div className="ant-enhance-advanced-table">
-      <UpdateTable<IRecord>
-        {...restProps}
-        columns={columns.filter(({ hideInTable }) => !hideInTable)}
-      />
+      {/*
+      <Card bordered={false} style={{ marginBottom: 16 }}>
+        {searchForm}
+      </Card>
+      */}
+
+      <Card bordered={false}>
+        <UpdateTable<IRecord>
+          {...restProps}
+          columns={columns.filter(({ hideInTable }) => !hideInTable)}
+        />
+      </Card>
 
       {wrapperViewType === 'Drawer' && (
         <Drawer

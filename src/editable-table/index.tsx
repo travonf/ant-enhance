@@ -385,7 +385,7 @@ class EditableTable extends React.PureComponent<IProps, IState> {
     this.columns = columns.map(c).concat(this.operation);
 
     return (
-      <div className={'editableTable'}>
+      <div className="editableTable">
         <Table<IRecord>
           columns={this.columns}
           rowKey={rowKey}

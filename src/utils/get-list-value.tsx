@@ -1,25 +1,25 @@
 import React from 'react';
 import moment from 'moment';
-import { __, find, join, map, compose } from 'ramda';
-import { Descriptions, Rate, Switch, Slider, Typography } from 'antd';
+import { __, compose, find, join, map } from 'ramda';
+import { Rate, Slider, Switch, Typography } from 'antd';
 import { PaperClipOutlined } from '@ant-design/icons';
-import { tag, flatTree, formatter, ItemOfOption, ItemToOption } from '../utils';
-import { IListProps, IColumnProps, DataEntry } from './typings';
+import flatTree from './flat-tree';
+import formatter from './formatter';
+import ItemOfOption from './item-of-option';
+import ItemToOption from './item-to-option';
+import tag from './tag';
+import { DataEntry } from '../advanced-table/typings';
 
-const ListItem = Descriptions.Item;
 const { Text, Link, Paragraph } = Typography;
 
 const formatMoment = compose(formatter, moment) as (inp?: any) => string;
-
-export const defaultDataEntry: DataEntry<any> = {
-  ComponentType: 'Input',
-  disabled: true,
-};
 
 /**
  * 获取输入值
  * @param DI dataIndex
  * @param DE dataEntry
+ * @param record
+ * @param list
  */
 function getValue<T>(DI: any, DE: DataEntry<T>, record: T, list: any) {
   const dataValue = record[DI];
@@ -134,49 +134,4 @@ function getValue<T>(DI: any, DE: DataEntry<T>, record: T, list: any) {
   }
 }
 
-function DetailList<IRecord extends object = {}>(props: IListProps<IRecord>) {
-  const { list, columns = [], record = {} as IRecord, ...restProps } = props;
-
-  const renderListItem = (column: IColumnProps<IRecord>) => {
-    const {
-      title,
-      dataIndex,
-      dataEntry = defaultDataEntry,
-      listItemProps,
-      hideInList = false,
-    } = column;
-
-    if (hideInList) return null;
-
-    return (
-      <ListItem
-        key={title as any}
-        label={title}
-        className="ant-enhance-advanced-table-detail-list-item"
-        {...listItemProps}
-      >
-        {getValue(dataIndex, dataEntry, record, list)}
-      </ListItem>
-    );
-  };
-
-  return (
-    <Descriptions
-      bordered
-      column={{
-        xs: 0x01,
-        sm: 0x01,
-        md: 0x02,
-        lg: 0x02,
-        xl: 0x02,
-        xxl: 0x04,
-      }}
-      layout="horizontal"
-      {...restProps}
-    >
-      {columns.map(renderListItem)}
-    </Descriptions>
-  );
-}
-
-export default DetailList;
+export default getValue;
