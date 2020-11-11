@@ -1,4 +1,4 @@
-![ant-enhance](/images/design_components.png)
+<!-- ![ant-enhance](/images/design_components.png) -->
 
 # Ant Enhance
 
@@ -59,6 +59,10 @@ export default () => (
 );
 ```
 
+## 检索表单
+
+> 高级表格的子组件，可以单独使用
+
 ## 详情列表
 
 > 高级表格的子组件，可以单独使用
@@ -76,7 +80,7 @@ const options = [
 
 export default () => (
   <DetailList
-    bordered={false}
+    bordered
     columns={[
       {
         title: '文本',
@@ -155,6 +159,7 @@ export default () => (
 
 ```jsx
 import React from 'react';
+import { Form } from 'antd';
 import { EditableTable } from 'ant-enhance';
 import { ItemOfOption } from 'ant-enhance/es/utils';
 
@@ -164,29 +169,52 @@ const options = [
   { label: '选项三', value: '3' },
 ];
 
-export default () => (
-  <EditableTable
-    columns={[
-      {
-        title: '文本',
-        dataIndex: 'text',
-      },
-      {
-        title: '选项',
-        dataIndex: 'select',
-        render: text =>
-          options
-            .filter(ItemOfOption(text))
-            .map(item => item.label)
-            .join(', '),
-      },
-    ]}
-    dataSource={[
-      { key: 1, text: '标题一', select: '1' },
-      { key: 2, text: '标题二', select: '2' },
-      { key: 3, text: '标题三', select: '3' },
-    ]}
-    pagination={false}
-  />
-);
+export default () => {
+  const [form] = Form.useForm();
+
+  return (
+    <Form form={form}>
+      <Form.Item
+        name="editable_table"
+        valuePropName="dataSource"
+        initialValue={[
+          { key: 1, text: '标题一', select: '1' },
+          { key: 2, text: '标题二', select: '2' },
+          { key: 3, text: '标题三', select: '3' },
+        ]}
+      >
+        <EditableTable
+          rowKey="key"
+          columns={[
+            {
+              title: '文本',
+              dataIndex: 'text',
+              editable: true,
+              dataEntry: {
+                type: 'Input',
+              },
+            },
+            {
+              title: '选项',
+              dataIndex: 'select',
+              editable: true,
+              dataEntry: {
+                type: 'Select',
+                options,
+              },
+              /*
+              render: text =>
+                options
+                  .filter(ItemOfOption(text))
+                  .map(item => item.label)
+                  .join(', '),
+               */
+            },
+          ]}
+          pagination={false}
+        />
+      </Form.Item>
+    </Form>
+  );
+};
 ```

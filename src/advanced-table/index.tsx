@@ -2,33 +2,42 @@ import React, { useState } from 'react';
 import { Card, Drawer, Modal, Form, Button, Popconfirm } from 'antd';
 import { DrawerProps } from 'antd/es/drawer';
 import { ModalProps } from 'antd/es/modal';
-import { DeleteOutlined, EditOutlined, ReadOutlined } from '@ant-design/icons';
+import { ReadOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { delay, localize } from '../utils';
-import UpdateTable from './update-table';
+import SearchTable from './search-table';
 import SearchForm from './search-form';
 import DetailList from './detail-list';
 import UpdateForm from './update-form';
-import { IAdvancedTable, IColumnProps } from './typings';
+import { IAdvancedTable, IColumnProps } from './typings.d';
 import './index.less';
 
 function AdvancedTable<IRecord extends object = {}>(props: IAdvancedTable<IRecord>) {
   const {
     wrapper = {},
+
+    searchForm: searchFormProps,
+    detailList: detailListProps,
+    updateForm: updateFormProps,
+
+    onSearch = console.debug,
+    onDetail = console.debug,
+    onUpdate = console.debug,
+    onDelete = console.debug,
+
     columns: userColumns = [],
-    onUpdate,
-    onError,
-    onDelete,
-    detailListProps,
-    updateFormProps,
     ...restProps
   } = props;
 
   const initialRecord = {} as IRecord;
   const [record, setRecord] = useState<IRecord>(initialRecord);
   const [visible, setVisible] = useState({ view: false, edit: false });
+
+  const [retrieving, setRetrieving] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [list] = [{ getFieldValue: (key: string) => record[key], resetFields: () => {} }];
-  const [form] = Form.useForm();
+
+  const [searchForm] = Form.useForm();
+  const [detailList] = [{ getFieldValue: (key: string) => record[key], resetFields: () => {} }];
+  const [updateForm] = Form.useForm();
 
   const {
     view: { type: wrapperViewType, ...restWrapperView } = {
@@ -66,23 +75,42 @@ function AdvancedTable<IRecord extends object = {}>(props: IAdvancedTable<IRecor
     if (onDelete) onDelete(record);
   };
 
-  const submit = async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    // console.log(e.target);
+  /**
+   * 检索表单搜索与重置操作
+   */
+  const searchFormSearch = async (values: IRecord) => {
+    // e.preventDefault();
+    try {
+      setRetrieving(true);
+      // const values = await searchForm.validateFields();
+      if (onSearch) await onSearch(localize(values as any) as IRecord);
+      await delay(300);
+    } catch (errors) {
+      console.error(errors);
+    } finally {
+      setRetrieving(false);
+    }
+  };
+
+  /**
+   * 更新表单提交与取消操作
+   */
+  const updateFormSubmit = async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     e.preventDefault();
     try {
       setSubmitting(true);
-      const values = await form.validateFields();
-      await delay(500);
-      if (onUpdate) onUpdate(localize(values) as IRecord);
+      const values = await updateForm.validateFields();
+      if (onUpdate) await onUpdate(localize(values) as IRecord);
+      await delay(300);
       hide('edit');
     } catch (errors) {
-      if (onError) onError(errors);
+      console.error(errors);
     } finally {
       setSubmitting(false);
     }
   };
 
-  const cancel = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+  const updateFormCancel = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     // console.log(e.target);
     e.preventDefault();
     hide('edit');
@@ -131,13 +159,14 @@ function AdvancedTable<IRecord extends object = {}>(props: IAdvancedTable<IRecor
   };
   const dfltOperations: IColumnProps<IRecord> = {
     title: '操作',
-    key: 'OPERATIONS',
+    key: '__OPERATIONS__',
     width: 128,
     align: 'center',
     fixed: 'right',
-    hideInSearch: true,
-    hideInList: true,
-    hideInForm: true,
+    hideInSearchTable: false,
+    hideInSearchForm: true,
+    hideInDetailList: true,
+    hideInUpdateForm: true,
     render: (text, record) => ['<detail>', '<update>', '<delete>'],
   };
   const KEY_EQ_OPERATIONS = ({ key }: IColumnProps<IRecord>) => key === '__OPERATIONS__';
@@ -154,51 +183,79 @@ function AdvancedTable<IRecord extends object = {}>(props: IAdvancedTable<IRecor
   };
   const columns = userColumns.filter(KEY_NE_OPERATIONS).concat(operations);
 
-  const searchForm = (
-    <SearchForm<IRecord>
-      form={form}
-      columns={userColumns.filter(({ hideInSearch }) => !hideInSearch)}
-      record={record}
-      {...updateFormProps}
+  const SearchTableComponent = (
+    <SearchTable<IRecord>
+      {...restProps}
+      columns={columns.filter(({ hideInSearchTable }) => !hideInSearchTable)}
     />
   );
 
-  const detailList = (
-    <DetailList<IRecord>
-      list={list}
-      columns={userColumns.filter(({ hideInList }) => !hideInList)}
+  const SearchFormComponent = (
+    <SearchForm<IRecord>
+      form={searchForm}
+      columns={userColumns
+        .filter(({ hideInSearchForm }) => !hideInSearchForm)
+        .sort(
+          (
+            { searchFormItemProps: { order: oa = Infinity } = {} as any },
+            { searchFormItemProps: { order: ob = Infinity } = {} as any },
+          ) => oa - ob,
+        )}
       record={record}
-      /**
-       * DescProps
-       */
+      retrieving={retrieving}
+      onFinish={searchFormSearch}
+      {...searchFormProps}
+    />
+  );
+
+  const DetailListComponent = (
+    <DetailList<IRecord>
+      list={detailList}
+      columns={userColumns
+        .filter(({ hideInDetailList }) => !hideInDetailList)
+        .sort(
+          (
+            { detailListItemProps: { order: oa = Infinity } = {} as any },
+            { detailListItemProps: { order: ob = Infinity } = {} as any },
+          ) => oa - ob,
+        )}
+      record={record}
       {...detailListProps}
     />
   );
-  const updateForm = (
+  const UpdateFormComponent = (
     <UpdateForm<IRecord>
-      form={form}
-      columns={userColumns.filter(({ hideInForm }) => !hideInForm)}
+      form={updateForm}
+      columns={userColumns
+        .filter(({ hideInUpdateForm }) => !hideInUpdateForm)
+        .sort(
+          (
+            { updateFormItemProps: { order: oa = Infinity } = {} as any },
+            { updateFormItemProps: { order: ob = Infinity } = {} as any },
+          ) => oa - ob,
+        )}
       record={record}
-      /**
-       * FormProps
-       */
       {...updateFormProps}
     />
   );
 
   return (
     <div className="ant-enhance-advanced-table">
-      {/*
-      <Card bordered={false} style={{ marginBottom: 16 }}>
-        {searchForm}
-      </Card>
-      */}
+      {searchFormProps && (
+        <Card
+          bordered={false}
+          style={{ marginBottom: 16 }}
+          // bodyStyle={{ paddingBottom: 0 }}
+        >
+          {SearchFormComponent}
+        </Card>
+      )}
 
-      <Card bordered={false}>
-        <UpdateTable<IRecord>
-          {...restProps}
-          columns={columns.filter(({ hideInTable }) => !hideInTable)}
-        />
+      <Card
+        bordered={false}
+        // bodyStyle={{ paddingTop: 0 }}
+      >
+        {SearchTableComponent}
       </Card>
 
       {wrapperViewType === 'Drawer' && (
@@ -211,7 +268,7 @@ function AdvancedTable<IRecord extends object = {}>(props: IAdvancedTable<IRecor
           }}
           footer={null}
         >
-          {detailList}
+          {DetailListComponent}
         </Drawer>
       )}
 
@@ -219,19 +276,19 @@ function AdvancedTable<IRecord extends object = {}>(props: IAdvancedTable<IRecor
         <Drawer
           {...(restWrapperEdit as DrawerProps)}
           visible={visible.edit}
-          onClose={cancel as any}
+          onClose={updateFormCancel as any}
           footer={
             <div style={{ textAlign: 'right' }}>
-              <Button type="default" onClick={cancel} style={{ marginRight: 8 }}>
+              <Button type="default" onClick={updateFormCancel} style={{ marginRight: 8 }}>
                 取消
               </Button>
-              <Button type="primary" onClick={submit} loading={submitting}>
+              <Button type="primary" onClick={updateFormSubmit} loading={submitting}>
                 提交
               </Button>
             </div>
           }
         >
-          {updateForm}
+          {UpdateFormComponent}
         </Drawer>
       )}
 
@@ -247,7 +304,7 @@ function AdvancedTable<IRecord extends object = {}>(props: IAdvancedTable<IRecor
           }}
           footer={null}
         >
-          {detailList}
+          {DetailListComponent}
         </Modal>
       )}
 
@@ -256,10 +313,10 @@ function AdvancedTable<IRecord extends object = {}>(props: IAdvancedTable<IRecor
           {...(restWrapperEdit as ModalProps)}
           visible={visible.edit}
           confirmLoading={submitting}
-          onOk={submit}
-          onCancel={cancel}
+          onOk={updateFormSubmit}
+          onCancel={updateFormCancel}
         >
-          {updateForm}
+          {UpdateFormComponent}
         </Modal>
       )}
     </div>
@@ -267,5 +324,5 @@ function AdvancedTable<IRecord extends object = {}>(props: IAdvancedTable<IRecor
 }
 
 export default AdvancedTable;
-export { UpdateTable, DetailList, UpdateForm, IColumnProps };
-export { ITableProps, IListProps, IFormProps } from './typings';
+export { SearchTable, SearchForm, DetailList, UpdateForm, IColumnProps };
+export { ISearchTable, ISearchForm, IDetailList, IUpdateForm } from './typings.d';

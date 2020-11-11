@@ -3,10 +3,6 @@ export { default as omit } from './omit';
 export { default as delay } from './delay';
 export { default as localize } from './localize';
 
-export { default as getFormInput } from './get-form-input';
-export { default as getFormValue } from './get-form-value';
-export { default as getListValue } from './get-list-value';
-
 export { default as flatTree } from './flat-tree';
 export { default as formatter } from './formatter';
 export { default as shouldUpdate } from './shouldUpdate';

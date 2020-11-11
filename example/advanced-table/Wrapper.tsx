@@ -27,7 +27,7 @@ const columns: IColumnProps<IRecord>[] = [
       strong: true,
       type: 'success',
     },
-    formItemProps: {
+    updateFormItemProps: {
       valuePropName: 'children',
     },
   },

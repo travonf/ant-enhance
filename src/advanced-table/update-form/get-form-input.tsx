@@ -18,10 +18,10 @@ import {
   Typography,
   Upload,
 } from 'antd';
-import omit from './omit';
-import ItemToMention from './item-to-mention';
-import ItemToSelect from './item-to-select';
-import { DataEntry } from '../advanced-table/typings';
+import omit from '../../utils/omit';
+import ItemToMention from '../../utils/item-to-mention';
+import ItemToSelect from '../../utils/item-to-select';
+import { DataEntry } from '../typings';
 
 const { Text, Link, Paragraph } = Typography;
 
@@ -33,7 +33,7 @@ const { Text, Link, Paragraph } = Typography;
  * @param form
  */
 function getInput<T>(DI: any, DE: DataEntry<T>, record: T, form: any) {
-  const dataEntry = typeof DE === 'function' ? DE(record, form!) : DE;
+  const dataEntry = typeof DE === 'function' ? DE(record, form!, 'update-form') : DE;
   // @ts-ignore
   const { ComponentType, options: opts = [] } = dataEntry;
   const restProps = omit(dataEntry, ['ComponentType']);

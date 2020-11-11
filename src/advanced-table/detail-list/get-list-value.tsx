@@ -3,12 +3,12 @@ import moment from 'moment';
 import { __, compose, find, join, map } from 'ramda';
 import { Rate, Slider, Switch, Typography } from 'antd';
 import { PaperClipOutlined } from '@ant-design/icons';
-import flatTree from './flat-tree';
-import formatter from './formatter';
-import ItemOfOption from './item-of-option';
-import ItemToOption from './item-to-option';
-import tag from './tag';
-import { DataEntry } from '../advanced-table/typings';
+import flatTree from '../../utils/flat-tree';
+import formatter from '../../utils/formatter';
+import ItemOfOption from '../../utils/item-of-option';
+import ItemToOption from '../../utils/item-to-option';
+import tag from '../../utils/tag';
+import { DataEntry } from '../typings';
 
 const { Text, Link, Paragraph } = Typography;
 
@@ -25,7 +25,7 @@ function getValue<T>(DI: any, DE: DataEntry<T>, record: T, list: any) {
   const dataValue = record[DI];
   if (typeof dataValue === 'undefined') return null;
 
-  const dataEntry = typeof DE === 'function' ? DE(record, list) : DE;
+  const dataEntry = typeof DE === 'function' ? DE(record, list, 'detail-list') : DE;
   // @ts-ignore
   const { ComponentType, options: opts = [], ...restProps } = dataEntry;
   const options = typeof opts === 'function' ? opts(record) : opts;

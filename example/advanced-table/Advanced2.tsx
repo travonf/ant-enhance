@@ -28,7 +28,7 @@ const columns: IColumnProps<IRecord>[] = [
       strong: true,
       type: 'success',
     },
-    formItemProps: {
+    updateFormItemProps: {
       valuePropName: 'children',
     },
   },
@@ -43,7 +43,7 @@ const columns: IColumnProps<IRecord>[] = [
       // shouldUpdate联动
       disabled: !!form.getFieldValue('Switch'),
     }),
-    formItemProps: {
+    updateFormItemProps: {
       /**
        * 演示shouldUpdate用法
        */
@@ -68,7 +68,7 @@ const columns: IColumnProps<IRecord>[] = [
       // dependencies联动
       disabled: !!form.getFieldValue('Switch'),
     }),
-    formItemProps: (record: IRecord, form: FormInstance<IRecord>) => ({
+    updateFormItemProps: (record: IRecord, form: FormInstance<IRecord>) => ({
       /**
        * 演示dependencies用法
        */
@@ -105,7 +105,7 @@ const columns: IColumnProps<IRecord>[] = [
       // shouldUpdate联动
       disabled: !!form.getFieldValue('Switch'),
     }),
-    formItemProps: {
+    updateFormItemProps: {
       shouldUpdate: (prev: any, curr: any) => prev.Switch !== curr.Switch,
     },
     render: (text: string) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
@@ -125,7 +125,7 @@ const columns: IColumnProps<IRecord>[] = [
         if (e) form.resetFields(['Input', 'Select', 'DatePicker']);
       },
     }),
-    formItemProps: {
+    updateFormItemProps: {
       valuePropName: 'checked',
     },
     render: (text: boolean) => <Switch checked={text} />,

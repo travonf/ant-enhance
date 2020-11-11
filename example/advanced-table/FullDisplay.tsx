@@ -36,7 +36,7 @@ const App: React.FC<any> = () => {
             width: '80vw',
           },
           edit: {
-            type: 'Modal',
+            type: 'Drawer',
             title: record.Text,
             width: '60vw',
           },
@@ -60,19 +60,37 @@ const App: React.FC<any> = () => {
           ),
         }}
         loading={loading}
-        scroll={{ x: 4200 }}
+        scroll={{ x: 5000 }}
         pagination={false}
+        /**
+         * 扩展属性
+         */
+        searchForm={{
+          defaultExpandCount: 4,
+        }}
+        onSearch={async (record: IRecord) => {
+          console.log(record);
+          message.loading('正在检索', 2);
+          await delay(2000);
+          message.success('检索成功', 2);
+        }}
+        onDetail={async (record: IRecord) => {
+          console.log(record);
+          message.loading('正在详情', 2);
+          await delay(2000);
+          message.success('详情成功', 2);
+        }}
         onUpdate={async (record: IRecord) => {
           console.log(record);
           message.loading('正在更新', 2);
           await delay(2000);
-          message.success('更新成功');
+          message.success('更新成功', 2);
         }}
         onDelete={async (record: IRecord) => {
           console.log(record);
           message.loading('正在删除', 2);
           await delay(2000);
-          message.success('删除成功');
+          message.success('删除成功', 2);
         }}
       />
     </div>

@@ -1,4 +1,4 @@
-![ant-enhance](./public/images/design_components.png)
+<!-- ![ant-enhance](./public/images/design_components.png) -->
 
 # 简介
 
@@ -24,31 +24,56 @@ $ yarn add ant-enhance
 
 ```tsx
 import React from 'react';
-import { Table, IColumnProps } from '../src/';
+import { AdvancedTable as Table } from 'ant-enhance';
+import { IColumnProps } from 'ant-enhance/es/advanced-table';
 
 interface IRecord {
   dataIndex: string;
 }
 
 const layout = {
-  col: {
-    /* 参考Col */
-    sm: 0x18,
-    lg: 0x18,
-    xl: 0x0c,
-  },
-  formItem: {
-    labelCol: {
-      /* 参考labelCol */
+  searchForm: {
+    col: {
+      /* 参考Col */
       sm: 0x18,
       lg: 0x18,
-      xl: 0x06,
+      xl: 0x0c,
     },
-    wrapperCol: {
-      /* 参考wrapperCol */
+    formItem: {
+      labelCol: {
+        /* 参考labelCol */
+        sm: 0x18,
+        lg: 0x18,
+        xl: 0x06,
+      },
+      wrapperCol: {
+        /* 参考wrapperCol */
+        sm: 0x18,
+        lg: 0x18,
+        xl: 0x12,
+      },
+    },
+  },
+  updateForm: {
+    col: {
+      /* 参考Col */
       sm: 0x18,
       lg: 0x18,
-      xl: 0x12,
+      xl: 0x0c,
+    },
+    formItem: {
+      labelCol: {
+        /* 参考labelCol */
+        sm: 0x18,
+        lg: 0x18,
+        xl: 0x06,
+      },
+      wrapperCol: {
+        /* 参考wrapperCol */
+        sm: 0x18,
+        lg: 0x18,
+        xl: 0x12,
+      },
     },
   },
 };
@@ -110,7 +135,10 @@ export default () => (
     /**
      * 弹出表单的容器，支持Drawer和Modal
      */
-    wrapper={{ type: 'Modal' }}
+    wrapper={{
+      view: { type: 'Modal' },
+      edit: { type: 'Modal' },
+    }}
     /**
      * 其余属性与antd Table保持一致
      */
@@ -150,19 +178,29 @@ wrapper?: {
 /**
  * 是否渲染
  */
-hideInTable?: boolean;
-hideInForm?: boolean;
+hideInSearchTable?: boolean;
+hideInSearchForm?: boolean;
+hideInDetailList?: boolean;
+hideInUpdateForm?: boolean;
 /**
  * 布局
  */
 layout?: {
-   col: {},
-   formItem: { labelCol: {}, wrapperCol: {} }
+  searchForm?: {
+    col: {},
+    formItem: { labelCol: {}, wrapperCol: {} }
+  }
+   updateForm?: {
+    col: {},
+    formItem: { labelCol: {}, wrapperCol: {} }
+  }
 };
 /**
  * 额外属性
  */
-formItemProps?: FormItemProps
+searchFormItemProps?: FormItemProps
+detailListItemProps?: {}
+updateFormItemProps?: FormItemProps
 /**
  * 核心属性
  * 弹出表单根据此配置渲染输入组件

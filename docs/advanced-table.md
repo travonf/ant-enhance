@@ -12,7 +12,7 @@
 
 - 兼容 antd 全部的数据录入组件
 - 全面拥抱 typescript，支持类型定义，极大的提升了开发体验
-- 高度可配置化，包括静态配置，动态配置（通过控制反转实现）
+- 高度可配置化，包括静态配置，动态配置
   - 表单联动，某个字段改变控制其他字段变化
 - 自动处理数据，无需手动序列化 moment 格式的日期
 
@@ -55,35 +55,93 @@
 ### Table
 
 ```typescript
-wrapper?: {
-  type?: 'Drawer' | 'Modal';
-  title?: any;
-  width?: any;
-}
+/**
+ * 弹出表单的容器
+ */
+wrapper?: Wrapper | WrapperFn<T>;
+
+/**
+ * 检索表单属性
+ */
+searchForm?: { defaultExpandCount?: number } & FormProps<T>;
+
+/**
+ * 详情列表属性
+ */
+detailList?: DescriptionsProps;
+
+/**
+ * 更新表单属性
+ */
+updateForm?: FormProps<T>;
+
+/**
+ * 检索数据
+ */
+onSearch?: (record: T) => void;
+
+/**
+ * 获取详情
+ */
+onDetail?: (record: T) => void;
+
+/**
+ * 更新数据
+ */
+onUpdate?: (record: T) => void;
+
+/**
+ * 删除数据
+ */
+onDelete?: (record: T) => void;
 ```
 
 ### Column
 
 ```typescript
 /**
- * 是否渲染
+ * 控制当前表格中是否渲染此字段
  */
-hideInTable?: boolean;
-hideInForm?: boolean;
+hideInSearchTable?: boolean;
+
 /**
- * 布局
+ * 控制检索表单中是否渲染此字段
  */
-layout?: {
-   col: {},
-   formItem: { labelCol: {}, wrapperCol: {} }
-};
+hideInSearchForm?: boolean;
+
 /**
- * 额外属性
+ * 控制详情列表中是否渲染此字段
  */
-formItemProps?: FormItemProps
+hideInDetailList?: boolean;
+
 /**
- * 核心属性
- * 弹出表单根据此配置渲染输入组件
+ * 控制更新表单中是否渲染此字段
  */
-dataEntry?: DataEntry | DataEntryFn<T>;
+hideInUpdateForm?: boolean;
+
+/**
+ * 表单布局
+ */
+layout?: RecursivePartial<typeof defaultLayout>;
+
+/**
+ * SearchFormItem额外属性
+ */
+searchFormItemProps?: IFormItemProps<T> | FormItemPropsFn<T>;
+
+/**
+ * DetailListItem额外属性
+ */
+detailListItemProps?: Omit<DescriptionsItemProps, 'children'>;
+
+/**
+ * UpdateFormItem额外属性
+ */
+updateFormItemProps?: IFormItemProps<T> | FormItemPropsFn<T>;
+
+/**
+ * 输入项属性，根据type可选择antd中对应的输入组件属性
+ * 也可以是自定义组件
+ */
+dataEntry?: DataEntry<T>;
 ```

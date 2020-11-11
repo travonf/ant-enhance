@@ -1,17 +1,23 @@
 import React from 'react';
 import { Row, Col, Form } from 'antd';
 import { omit } from '../../utils';
-import getInput from '../../utils/get-form-input';
-import getValue from '../../utils/get-form-value';
+import getInput from './get-form-input';
+import getValue from './get-form-value';
 import { defaultLayout } from '../layouts';
 import { defaultDataEntry } from '../profile';
-import { IFormProps, IColumnProps, DataEntry } from '../typings';
+import { IUpdateForm, IColumnProps } from '../typings';
 
 const FormItem = Form.Item;
 
-function UpdateForm<IRecord extends object = {}>(props: IFormProps<IRecord>) {
+function UpdateForm<IRecord extends object = {}>(props: IUpdateForm<IRecord>) {
+  const {
+    form,
+    columns = [],
+    record = {} as IRecord,
+    //
+    ...restProps
+  } = props;
   const [, forceUpdate] = React.useState<object>();
-  const { form, columns = [], record = {} as IRecord, ...restProps } = props;
 
   React.useEffect(() => {
     const keys = Object.keys(form?.getFieldsValue() || {});
@@ -29,17 +35,20 @@ function UpdateForm<IRecord extends object = {}>(props: IFormProps<IRecord>) {
     };
   }, [record]);
 
+  /**
+   * FormItem Render
+   */
   const renderFormItem = (column: IColumnProps<IRecord>) => {
     const {
       title,
       dataIndex,
       dataEntry = defaultDataEntry,
       layout: userLayout,
-      formItemProps: userFormItemProps = {},
-      hideInForm = false,
+      updateFormItemProps: userFormItemProps = {},
+      hideInUpdateForm = false,
     } = column;
 
-    if (hideInForm) return null;
+    if (hideInUpdateForm) return null;
 
     const layout = { ...defaultLayout, ...userLayout };
 
@@ -51,18 +60,17 @@ function UpdateForm<IRecord extends object = {}>(props: IFormProps<IRecord>) {
     const formItemProps = () => ({
       label: title,
       name: dataIndex,
-      // rules: [{ required: true, message: `${title}是必填项!` }],
       ...omit(userFormItemPropsFn(record, form!), ['shouldUpdate', 'dependencies']),
     });
 
     const formItem = () => (
-      <FormItem {...layout.formItem} {...formItemProps()}>
+      <FormItem {...layout.updateForm.formItem} {...formItemProps()}>
         {getInput<IRecord>(dataIndex, dataEntry, record, form)}
       </FormItem>
     );
 
     return (
-      <Col key={String(dataIndex)} {...layout.col}>
+      <Col key={String(dataIndex)} {...layout.updateForm.col}>
         {!!dependencies || !!shouldUpdate ? (
           <FormItem
             style={{ marginBottom: 0 }}
@@ -79,7 +87,7 @@ function UpdateForm<IRecord extends object = {}>(props: IFormProps<IRecord>) {
   };
 
   return (
-    <Form form={form} name="form_in_wrapper" {...restProps}>
+    <Form form={form} name="update-form" {...restProps}>
       <Row gutter={0x10}>{columns.map(renderFormItem)}</Row>
     </Form>
   );

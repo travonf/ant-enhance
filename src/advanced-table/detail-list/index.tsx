@@ -1,7 +1,7 @@
 import React from 'react';
 import { Descriptions } from 'antd';
-import getValue from '../../utils/get-list-value';
-import { IListProps, IColumnProps, DataEntry } from '../typings';
+import getValue from './get-list-value';
+import { IDetailList, IColumnProps, DataEntry } from '../typings';
 
 const ListItem = Descriptions.Item;
 
@@ -10,7 +10,7 @@ export const defaultDataEntry: DataEntry<any> = {
   disabled: true,
 };
 
-function DetailList<IRecord extends object = {}>(props: IListProps<IRecord>) {
+function DetailList<IRecord extends object = {}>(props: IDetailList<IRecord>) {
   const { list, columns = [], record = {} as IRecord, ...restProps } = props;
 
   const renderListItem = (column: IColumnProps<IRecord>) => {
@@ -18,18 +18,18 @@ function DetailList<IRecord extends object = {}>(props: IListProps<IRecord>) {
       title,
       dataIndex,
       dataEntry = defaultDataEntry,
-      listItemProps,
-      hideInList = false,
+      detailListItemProps,
+      hideInDetailList = false,
     } = column;
 
-    if (hideInList) return null;
+    if (hideInDetailList) return null;
 
     return (
       <ListItem
         key={title as any}
         label={title}
         className="ant-enhance-advanced-table-detail-list-item"
-        {...listItemProps}
+        {...detailListItemProps}
       >
         {getValue(dataIndex, dataEntry, record, list)}
       </ListItem>

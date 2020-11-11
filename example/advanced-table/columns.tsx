@@ -24,7 +24,7 @@ const columns: IColumnProps<IRecord>[] = [
     dataIndex: 'Text',
     width: 160,
     ellipsis: true,
-    hideInSearch: false,
+    hideInSearchForm: true,
     layout: halfLayout,
     dataEntry: {
       /**
@@ -43,7 +43,12 @@ const columns: IColumnProps<IRecord>[] = [
       strong: true,
       type: 'success',
     },
-    formItemProps: {
+    searchFormItemProps: {
+      order: 1,
+      valuePropName: 'children',
+    },
+    updateFormItemProps: {
+      order: 1,
       valuePropName: 'children',
     },
     render: (text: string) => <span style={{ fontFamily: '"Fira Code", monospace' }}>{text}</span>,
@@ -53,7 +58,7 @@ const columns: IColumnProps<IRecord>[] = [
     dataIndex: 'Link',
     width: 160,
     ellipsis: true,
-    hideInSearch: true,
+    hideInSearchForm: true,
     layout: halfLayout,
     dataEntry: {
       /**
@@ -63,7 +68,12 @@ const columns: IColumnProps<IRecord>[] = [
       target: '_blank',
       children: '点击打开',
     },
-    formItemProps: {
+    searchFormItemProps: {
+      order: 2,
+      valuePropName: 'href',
+    },
+    updateFormItemProps: {
+      order: 2,
       valuePropName: 'href',
     },
   },
@@ -72,7 +82,7 @@ const columns: IColumnProps<IRecord>[] = [
     dataIndex: 'Paragraph',
     width: 200,
     ellipsis: true,
-    hideInSearch: true,
+    hideInSearchForm: true,
     layout: fullLayout,
     dataEntry: {
       /**
@@ -96,13 +106,18 @@ const columns: IColumnProps<IRecord>[] = [
       // strong: true,
       type: 'secondary',
     },
-    formItemProps: {
+    searchFormItemProps: {
+      order: 3,
       valuePropName: 'children',
     },
-    listItemProps: {
+    updateFormItemProps: {
+      order: 3,
+      valuePropName: 'children',
+    },
+    detailListItemProps: {
       span: 2,
     },
-    // hideInList: true,
+    // hideInDetailList: true,
   },
 
   /**
@@ -112,7 +127,7 @@ const columns: IColumnProps<IRecord>[] = [
     title: '数字输入',
     dataIndex: 'InputNumber',
     align: 'right',
-    hideInSearch: true,
+    hideInSearchForm: false,
     layout: halfLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -124,12 +139,30 @@ const columns: IColumnProps<IRecord>[] = [
       step: 10,
       onChange: console.log,
     },
+    searchFormItemProps: {
+      order: 4,
+      dataEntry: {
+        disabled: false,
+      },
+    },
+    updateFormItemProps: {
+      order: 4,
+      dataEntry: {
+        disabled: true,
+      },
+    },
   },
   {
     title: '文本输入',
     dataIndex: 'Input',
     ellipsis: true,
-    hideInSearch: false,
+    hideInSearchForm: false,
+    searchFormItemProps: {
+      order: 5,
+    },
+    updateFormItemProps: {
+      order: 5,
+    },
     layout: halfLayout,
     dataEntry: (record, form) => ({
       // placeholder: '请输入',
@@ -146,7 +179,7 @@ const columns: IColumnProps<IRecord>[] = [
   {
     title: '自动完成',
     dataIndex: 'AutoComplete',
-    hideInSearch: true,
+    hideInSearchForm: false,
     layout: halfLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -158,7 +191,7 @@ const columns: IColumnProps<IRecord>[] = [
     title: '提及',
     dataIndex: 'Mentions',
     ellipsis: true,
-    hideInSearch: true,
+    hideInSearchForm: false,
     layout: halfLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -172,7 +205,7 @@ const columns: IColumnProps<IRecord>[] = [
     dataIndex: 'TextArea',
     width: 600,
     ellipsis: true,
-    hideInSearch: true,
+    hideInSearchForm: false,
     layout: fullLayout,
     dataEntry: (record, form) => {
       return {
@@ -188,14 +221,14 @@ const columns: IColumnProps<IRecord>[] = [
         disabled: !!form.getFieldValue('Switch'),
       };
     },
-    formItemProps: {
+    updateFormItemProps: {
       // dependencies: ['Switch'],
       shouldUpdate: shouldUpdate('Switch'),
     },
-    listItemProps: {
+    detailListItemProps: {
       span: 2,
     },
-    hideInTable: false,
+    hideInSearchTable: false,
     render: (text: string) => (
       <pre
         style={{
@@ -216,7 +249,7 @@ const columns: IColumnProps<IRecord>[] = [
     dataIndex: 'Switch',
     width: 60,
     align: 'center',
-    hideInSearch: true,
+    hideInSearchForm: false,
     layout: halfLayout,
     dataEntry: (record, form) => ({
       // placeholder: '请输入',
@@ -230,7 +263,10 @@ const columns: IColumnProps<IRecord>[] = [
         if (e) form.resetFields(['Rate']);
       },
     }),
-    formItemProps: {
+    searchFormItemProps: {
+      valuePropName: 'checked',
+    },
+    updateFormItemProps: {
       valuePropName: 'checked',
     },
     render: (text: boolean) => <Switch checked={text} />,
@@ -239,7 +275,7 @@ const columns: IColumnProps<IRecord>[] = [
     title: '评分',
     dataIndex: 'Rate',
     width: 180,
-    hideInSearch: true,
+    hideInSearchForm: false,
     layout: halfLayout,
     dataEntry: (record, form) => ({
       // placeholder: '请输入',
@@ -250,7 +286,7 @@ const columns: IColumnProps<IRecord>[] = [
        */
       disabled: !!form.getFieldValue('Switch'),
     }),
-    formItemProps: (record, form) => ({
+    updateFormItemProps: (record, form) => ({
       /**
        * 表单联动
        * 演示如何控制表单项属性
@@ -272,14 +308,14 @@ const columns: IColumnProps<IRecord>[] = [
     title: '滑块',
     dataIndex: 'Slider',
     width: 200,
-    hideInSearch: true,
+    hideInSearchForm: false,
     layout: fullLayout,
     dataEntry: {
       // placeholder: '请输入',
       ComponentType: 'Slider',
       //   tooltipVisible: false,
     },
-    listItemProps: {
+    detailListItemProps: {
       span: 2,
     },
     render: (text: number) => <Slider value={text} />,
@@ -289,7 +325,7 @@ const columns: IColumnProps<IRecord>[] = [
     dataIndex: 'Radio',
     width: 84,
     filters: OPTIONS.map(({ label, value }) => ({ text: label, value })),
-    hideInSearch: true,
+    hideInSearchForm: false,
     layout: halfLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -303,7 +339,7 @@ const columns: IColumnProps<IRecord>[] = [
     dataIndex: 'Checkbox',
     width: 332,
     filters: OPTIONS.map(({ label, value }) => ({ text: label, value })),
-    hideInSearch: true,
+    hideInSearchForm: false,
     layout: halfLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -318,7 +354,7 @@ const columns: IColumnProps<IRecord>[] = [
     dataIndex: 'Select',
     width: 212,
     filters: OPTIONS.map(({ label, value }) => ({ text: label, value })),
-    hideInSearch: true,
+    hideInSearchForm: false,
     layout: halfLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -334,7 +370,7 @@ const columns: IColumnProps<IRecord>[] = [
     dataIndex: 'Transfer',
     width: 269,
     filters: TRANSFER_DATA.map(({ title, key, ...rest }) => ({ text: title, value: key, ...rest })),
-    hideInSearch: true,
+    hideInSearchForm: false,
     layout: fullLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -344,7 +380,10 @@ const columns: IColumnProps<IRecord>[] = [
       listStyle: { width: '100%' },
       titles: ['来源', '目标'],
     },
-    formItemProps: {
+    updateFormItemProps: {
+      valuePropName: 'targetKeys',
+    },
+    searchFormItemProps: {
       valuePropName: 'targetKeys',
     },
     render: (text: string[]) =>
@@ -358,7 +397,7 @@ const columns: IColumnProps<IRecord>[] = [
     title: '级联选择',
     dataIndex: 'Cascader',
     width: 230,
-    hideInSearch: true,
+    hideInSearchForm: false,
     layout: halfLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -373,8 +412,8 @@ const columns: IColumnProps<IRecord>[] = [
     title: '树选择',
     dataIndex: 'TreeSelect',
     width: 230,
-    hideInSearch: true,
-    layout: fullLayout,
+    hideInSearchForm: false,
+    layout: halfLayout,
     dataEntry: {
       // placeholder: '请输入',
       ComponentType: 'TreeSelect',
@@ -396,7 +435,7 @@ const columns: IColumnProps<IRecord>[] = [
   {
     title: '日期',
     dataIndex: 'DatePicker',
-    hideInSearch: true,
+    hideInSearchForm: false,
     layout: halfLayout,
     dataEntry: (record, form) => ({
       // placeholder: '请输入',
@@ -421,7 +460,7 @@ const columns: IColumnProps<IRecord>[] = [
   {
     title: '年份',
     dataIndex: 'YearPicker',
-    hideInSearch: true,
+    hideInSearchForm: false,
     layout: halfLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -434,7 +473,7 @@ const columns: IColumnProps<IRecord>[] = [
   {
     title: '季度',
     dataIndex: 'QuarterPicker',
-    hideInSearch: true,
+    hideInSearchForm: false,
     layout: halfLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -447,7 +486,7 @@ const columns: IColumnProps<IRecord>[] = [
   {
     title: '月份',
     dataIndex: 'MonthPicker',
-    hideInSearch: true,
+    hideInSearchForm: false,
     layout: halfLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -460,7 +499,7 @@ const columns: IColumnProps<IRecord>[] = [
   {
     title: '星期',
     dataIndex: 'WeekPicker',
-    hideInSearch: true,
+    hideInSearchForm: false,
     layout: halfLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -473,7 +512,7 @@ const columns: IColumnProps<IRecord>[] = [
   {
     title: '时间',
     dataIndex: 'TimePicker',
-    hideInSearch: true,
+    hideInSearchForm: false,
     layout: halfLayout,
     dataEntry: {
       // placeholder: '请输入',
@@ -487,7 +526,7 @@ const columns: IColumnProps<IRecord>[] = [
     dataIndex: 'DateRangePicker',
     width: 120,
     align: 'center',
-    hideInSearch: true,
+    hideInSearchForm: false,
     layout: halfLayout,
     dataEntry: {
       // placeholder: ['请输入', '请输入'],
@@ -507,7 +546,7 @@ const columns: IColumnProps<IRecord>[] = [
     width: 180,
     align: 'center',
     layout: halfLayout,
-    hideInSearch: true,
+    hideInSearchForm: false,
     dataEntry: {
       // placeholder: ['请输入', '请输入'],
       ComponentType: 'RangePicker',
@@ -524,16 +563,20 @@ const columns: IColumnProps<IRecord>[] = [
     dataIndex: 'Upload',
     ellipsis: true,
     layout: halfLayout,
-    hideInSearch: true,
+    hideInSearchForm: true,
     dataEntry: {
       ComponentType: 'Upload',
       children: <Button icon={<UploadOutlined />}>点击上传</Button>,
     },
-    formItemProps: {
+    searchFormItemProps: {
       valuePropName: 'fileList',
       getValueFromEvent: (e: any) => e.fileList,
     },
-    listItemProps: {
+    updateFormItemProps: {
+      valuePropName: 'fileList',
+      getValueFromEvent: (e: any) => e.fileList,
+    },
+    detailListItemProps: {
       span: 2,
     },
     render: (text: any[]) =>
@@ -557,7 +600,7 @@ const columns: IColumnProps<IRecord>[] = [
     title: '拖拽上传',
     dataIndex: 'Dragger',
     ellipsis: true,
-    hideInSearch: true,
+    hideInSearchForm: true,
     layout: fullLayout,
     dataEntry: {
       ComponentType: 'Upload.Dragger',
@@ -574,11 +617,15 @@ const columns: IColumnProps<IRecord>[] = [
         </>
       ),
     },
-    formItemProps: {
+    searchFormItemProps: {
       valuePropName: 'fileList',
       getValueFromEvent: (e: any) => e.fileList,
     },
-    listItemProps: {
+    updateFormItemProps: {
+      valuePropName: 'fileList',
+      getValueFromEvent: (e: any) => e.fileList,
+    },
+    detailListItemProps: {
       span: 2,
     },
     render: (text: any[]) =>
@@ -604,8 +651,8 @@ const columns: IColumnProps<IRecord>[] = [
   {
     title: '表格',
     dataIndex: 'Table',
-    hideInTable: true,
-    hideInSearch: true,
+    hideInSearchTable: true,
+    hideInSearchForm: true,
     layout: fullLayout,
     dataEntry: {
       /**
@@ -640,7 +687,10 @@ const columns: IColumnProps<IRecord>[] = [
       ],
       pagination: false,
     },
-    formItemProps: {
+    searchFormItemProps: {
+      valuePropName: 'dataSource',
+    },
+    updateFormItemProps: {
       valuePropName: 'dataSource',
     },
     render: (text: any[]) => (
@@ -661,9 +711,9 @@ const columns: IColumnProps<IRecord>[] = [
     width: 160,
     align: 'center',
     fixed: 'right',
-    hideInSearch: true,
-    hideInList: true,
-    hideInForm: true,
+    hideInSearchForm: true,
+    hideInDetailList: true,
+    hideInUpdateForm: true,
     render: (text, record) => [
       /**
        * 演示如何自定义操作栏
