@@ -13,7 +13,7 @@ import { DataEntry } from '../typings';
  */
 function getValue<T>(DI: any, DE: DataEntry<T>, record: T, form: any) {
   const dataValue = record[DI];
-  const dataEntry = typeof DE === 'function' ? DE(record, form!, source.update_form) : DE;
+  const dataEntry = typeof DE === 'function' ? DE(record, form!, source.submit_form) : DE;
   switch (dataEntry.ComponentType) {
     /**
      * 排版

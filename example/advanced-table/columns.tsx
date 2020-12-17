@@ -110,6 +110,10 @@ const columns: IColumnProps<IRecord>[] = [
       order: 3,
       valuePropName: 'children',
     },
+    submitFormItemProps: {
+      order: 3,
+      valuePropName: 'children',
+    },
     updateFormItemProps: {
       order: 3,
       valuePropName: 'children',
@@ -141,15 +145,19 @@ const columns: IColumnProps<IRecord>[] = [
     },
     searchFormItemProps: {
       order: 4,
+      /*
       dataEntry: {
         disabled: false,
       },
+      */
     },
     updateFormItemProps: {
       order: 4,
+      /*
       dataEntry: {
         disabled: true,
       },
+      */
     },
   },
   {
@@ -264,6 +272,9 @@ const columns: IColumnProps<IRecord>[] = [
       },
     }),
     searchFormItemProps: {
+      valuePropName: 'checked',
+    },
+    submitFormItemProps: {
       valuePropName: 'checked',
     },
     updateFormItemProps: {
@@ -572,6 +583,10 @@ const columns: IColumnProps<IRecord>[] = [
       valuePropName: 'fileList',
       getValueFromEvent: (e: any) => e.fileList,
     },
+    submitFormItemProps: {
+      valuePropName: 'fileList',
+      getValueFromEvent: (e: any) => e.fileList,
+    },
     updateFormItemProps: {
       valuePropName: 'fileList',
       getValueFromEvent: (e: any) => e.fileList,
@@ -618,6 +633,10 @@ const columns: IColumnProps<IRecord>[] = [
       ),
     },
     searchFormItemProps: {
+      valuePropName: 'fileList',
+      getValueFromEvent: (e: any) => e.fileList,
+    },
+    submitFormItemProps: {
       valuePropName: 'fileList',
       getValueFromEvent: (e: any) => e.fileList,
     },

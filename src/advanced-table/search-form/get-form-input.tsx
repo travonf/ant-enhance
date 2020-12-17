@@ -21,6 +21,7 @@ import {
 import omit from '../../utils/omit';
 import ItemToMention from '../../utils/item-to-mention';
 import ItemToSelect from '../../utils/item-to-select';
+import { source } from '../profile';
 import { DataEntry } from '../typings';
 
 const { Text, Link, Paragraph } = Typography;
@@ -33,7 +34,7 @@ const { Text, Link, Paragraph } = Typography;
  * @param form
  */
 function getInput<T>(DI: any, DE: DataEntry<T>, record: T, form: any) {
-  const dataEntry = typeof DE === 'function' ? DE(record, form!, 'search-form') : DE;
+  const dataEntry = typeof DE === 'function' ? DE(record, form!, source.search_form) : DE;
   // @ts-ignore
   const { ComponentType, options: opts = [] } = dataEntry;
   const restProps = omit(dataEntry, ['ComponentType']);

@@ -30,6 +30,11 @@ const App: React.FC<any> = () => {
     <div className={styles.wrapper}>
       <Table<IRecord>
         wrapper={(record: IRecord) => ({
+          plus: {
+            type: 'Modal',
+            title: record.Text,
+            width: '80vw',
+          },
           view: {
             type: 'Modal',
             title: record.Text,
@@ -68,11 +73,20 @@ const App: React.FC<any> = () => {
         searchForm={{
           defaultExpandCount: 4,
         }}
+        submitForm={{
+          name: 'submit-form',
+        }}
         onSearch={async (record: IRecord) => {
           console.log(record);
           message.loading('正在检索', 2);
           await delay(2000);
           message.success('检索成功', 2);
+        }}
+        onSubmit={async (record: IRecord) => {
+          console.log(record);
+          message.loading('正在录入', 2);
+          await delay(2000);
+          message.success('录入成功', 2);
         }}
         onDetail={async (record: IRecord) => {
           console.log(record);

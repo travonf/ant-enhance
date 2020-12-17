@@ -24,6 +24,11 @@ import { FormProps, FormItemProps, FormInstance } from 'antd/es/form';
 import { DrawerProps } from 'antd/es/drawer';
 import { ModalProps } from 'antd/es/modal';
 import { defaultLayout } from './layouts';
+import { source } from './profile';
+
+export type ValueOf<T> = T[keyof T];
+
+type Source = ValueOf<typeof source>;
 
 export type RecursivePartial<T> = {
   [P in keyof T]?: T[P] extends (infer U)[]
@@ -88,11 +93,7 @@ export type IDataEntry =
    */
   | { ComponentType: Function; [key: string]: any };
 
-export type DataEntryFn<T> = (
-  record: T,
-  form: FormInstance<T>,
-  source: 'search-form' | 'detail-list' | 'update-form',
-) => IDataEntry;
+export type DataEntryFn<T> = (record: T, form: FormInstance<T>, source: Source) => IDataEntry;
 
 export type DataEntry<T> = IDataEntry | DataEntryFn<T>;
 
@@ -106,12 +107,17 @@ export interface IColumnProps<T> extends ColumnProps<T> {
   /**
    * 控制当前表格中是否渲染此字段
    */
-  hideInSearchTable?: boolean;
+  hideInSearchList?: boolean;
 
   /**
    * 控制检索表单中是否渲染此字段
    */
   hideInSearchForm?: boolean;
+
+  /**
+   * 控制录入表单中是否渲染此字段
+   */
+  hideInSubmitForm?: boolean;
 
   /**
    * 控制详情列表中是否渲染此字段
@@ -134,6 +140,11 @@ export interface IColumnProps<T> extends ColumnProps<T> {
   searchFormItemProps?: IFormItemProps<T> | FormItemPropsFn<T>;
 
   /**
+   * SubmitFormItem额外属性
+   */
+  submitFormItemProps?: IFormItemProps<T> | FormItemPropsFn<T>;
+
+  /**
    * DetailListItem额外属性
    */
   detailListItemProps?: Omit<DescriptionsItemProps, 'children'>;
@@ -153,7 +164,7 @@ export interface IColumnProps<T> extends ColumnProps<T> {
 /**
  * 检索表格
  */
-export interface ISearchTable<T> extends TableProps<T> {
+export interface ISearchList<T> extends TableProps<T> {
   columns?: IColumnProps<T>[];
 }
 
@@ -177,6 +188,14 @@ export interface IDetailList<T> extends DescriptionsProps {
 }
 
 /**
+ * 录入表单
+ */
+export interface ISubmitForm<T> extends FormProps<T> {
+  columns: IColumnProps<T>[];
+  record: T;
+}
+
+/**
  * 更新表单
  */
 export interface IUpdateForm<T> extends FormProps<T> {
@@ -186,12 +205,13 @@ export interface IUpdateForm<T> extends FormProps<T> {
 
 type WrapperWithType = ({ type: 'Drawer' } & DrawerProps) | ({ type: 'Modal' } & ModalProps);
 type Wrapper = {
+  plus?: WrapperWithType;
   view?: WrapperWithType;
   edit?: WrapperWithType;
 };
 type WrapperFn<T> = (record: T) => Wrapper;
 
-export interface IAdvancedTable<T> extends ISearchTable<T> {
+export interface IAdvancedTable<T> extends ISearchList<T> {
   /**
    * 弹出表单的容器
    */
@@ -201,6 +221,11 @@ export interface IAdvancedTable<T> extends ISearchTable<T> {
    * 检索表单属性
    */
   searchForm?: { defaultExpandCount?: number } & FormProps<T>;
+
+  /**
+   * 录入表单属性
+   */
+  submitForm?: FormProps<T>;
 
   /**
    * 详情列表属性
@@ -216,6 +241,11 @@ export interface IAdvancedTable<T> extends ISearchTable<T> {
    * 检索数据
    */
   onSearch?: (record: T) => void;
+
+  /**
+   * 录入数据
+   */
+  onSubmit?: (record: T) => void;
 
   /**
    * 获取详情

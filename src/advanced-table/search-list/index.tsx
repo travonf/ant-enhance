@@ -1,8 +1,8 @@
 import React from 'react';
 import { Table } from 'antd';
-import { ISearchTable } from '../typings';
+import { ISearchList } from '../typings';
 
-function SearchTable<IRecord extends object = {}>(props: ISearchTable<IRecord>) {
+function SearchTable<IRecord extends object = {}>(props: ISearchList<IRecord>) {
   const { columns = [], ...restProps } = props;
 
   return (

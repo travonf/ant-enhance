@@ -8,6 +8,7 @@ import formatter from '../../utils/formatter';
 import ItemOfOption from '../../utils/item-of-option';
 import ItemToOption from '../../utils/item-to-option';
 import tag from '../../utils/tag';
+import { source } from '../profile';
 import { DataEntry } from '../typings';
 
 const { Text, Link, Paragraph } = Typography;
@@ -20,12 +21,19 @@ const formatMoment = compose(formatter, moment) as (inp?: any) => string;
  * @param DE dataEntry
  * @param record
  * @param list
+ * @param render
  */
-function getValue<T>(DI: any, DE: DataEntry<T>, record: T, list: any) {
+function getValue<T>(
+  DI: any,
+  DE: DataEntry<T>,
+  record: T,
+  list: any,
+  render: any = JSON.stringify,
+) {
   const dataValue = record[DI];
   if (typeof dataValue === 'undefined') return null;
 
-  const dataEntry = typeof DE === 'function' ? DE(record, list, 'detail-list') : DE;
+  const dataEntry = typeof DE === 'function' ? DE(record, list!, source.detail_list) : DE;
   // @ts-ignore
   const { ComponentType, options: opts = [], ...restProps } = dataEntry;
   const options = typeof opts === 'function' ? opts(record) : opts;
@@ -130,7 +138,7 @@ function getValue<T>(DI: any, DE: DataEntry<T>, record: T, list: any) {
       );
 
     default:
-      return JSON.stringify(dataValue);
+      return render(dataValue);
   }
 }
 

@@ -20,6 +20,7 @@ function DetailList<IRecord extends object = {}>(props: IDetailList<IRecord>) {
       dataEntry = defaultDataEntry,
       detailListItemProps,
       hideInDetailList = false,
+      render,
     } = column;
 
     if (hideInDetailList) return null;
@@ -31,7 +32,7 @@ function DetailList<IRecord extends object = {}>(props: IDetailList<IRecord>) {
         className="ant-enhance-advanced-table-detail-list-item"
         {...detailListItemProps}
       >
-        {getValue(dataIndex, dataEntry, record, list)}
+        {getValue(dataIndex, dataEntry, record, list, render)}
       </ListItem>
     );
   };

@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Card, Drawer, Modal, Form, Button, Popconfirm } from 'antd';
 import { DrawerProps } from 'antd/es/drawer';
 import { ModalProps } from 'antd/es/modal';
-import { ReadOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined, ReadOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { delay, localize } from '../utils';
-import SearchTable from './search-table';
+import { InfoBar, ToolBar } from './component';
+import SearchList from './search-list';
 import SearchForm from './search-form';
+import SubmitForm from './submit-form';
 import DetailList from './detail-list';
 import UpdateForm from './update-form';
 import { IAdvancedTable, IColumnProps } from './typings.d';
@@ -16,10 +18,12 @@ function AdvancedTable<IRecord extends object = {}>(props: IAdvancedTable<IRecor
     wrapper = {},
 
     searchForm: searchFormProps,
+    submitForm: submitFormProps,
     detailList: detailListProps,
     updateForm: updateFormProps,
 
     onSearch = console.debug,
+    onSubmit = console.debug,
     onDetail = console.debug,
     onUpdate = console.debug,
     onDelete = console.debug,
@@ -30,16 +34,23 @@ function AdvancedTable<IRecord extends object = {}>(props: IAdvancedTable<IRecor
 
   const initialRecord = {} as IRecord;
   const [record, setRecord] = useState<IRecord>(initialRecord);
-  const [visible, setVisible] = useState({ view: false, edit: false });
+  const initialVisible = { plus: false, view: false, edit: false };
+  const [visible, setVisible] = useState(initialVisible);
 
   const [retrieving, setRetrieving] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   const [searchForm] = Form.useForm();
+  const [submitForm] = Form.useForm();
   const [detailList] = [{ getFieldValue: (key: string) => record[key], resetFields: () => {} }];
   const [updateForm] = Form.useForm();
 
   const {
+    plus: { type: wrapperPlusType, ...restWrapperPlus } = {
+      type: 'Drawer',
+      title: '新建',
+      width: '80vw',
+    },
     view: { type: wrapperViewType, ...restWrapperView } = {
       type: 'Drawer',
       title: '详情',
@@ -52,13 +63,18 @@ function AdvancedTable<IRecord extends object = {}>(props: IAdvancedTable<IRecor
     },
   } = typeof wrapper === 'function' ? wrapper(record) : wrapper;
 
-  const show = (type: 'view' | 'edit') => {
+  const show = (type: keyof typeof initialVisible) => {
     setVisible({ ...visible, [type]: true });
   };
 
-  const hide = (type: 'view' | 'edit') => {
+  const hide = (type: keyof typeof initialVisible) => {
     setVisible({ ...visible, [type]: false });
     setRecord(initialRecord);
+  };
+
+  const plus = (record: IRecord) => {
+    setRecord(record);
+    show('plus');
   };
 
   const view = (record: IRecord) => {
@@ -93,6 +109,29 @@ function AdvancedTable<IRecord extends object = {}>(props: IAdvancedTable<IRecor
   };
 
   /**
+   * 录入表单提交与取消操作
+   */
+  const submitFormSubmit = async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    e.preventDefault();
+    try {
+      setSubmitting(true);
+      const values = await submitForm.validateFields();
+      if (onSubmit) await onSubmit(localize(values) as IRecord);
+      await delay(300);
+      hide('plus');
+    } catch (errors) {
+      console.error(errors);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+  const submitFormCancel = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    // console.log(e.target);
+    e.preventDefault();
+    hide('plus');
+  };
+
+  /**
    * 更新表单提交与取消操作
    */
   const updateFormSubmit = async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -109,13 +148,23 @@ function AdvancedTable<IRecord extends object = {}>(props: IAdvancedTable<IRecor
       setSubmitting(false);
     }
   };
-
   const updateFormCancel = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     // console.log(e.target);
     e.preventDefault();
     hide('edit');
   };
 
+  const submitButton = (record: IRecord) => (
+    <Button
+      key="submit"
+      title="新建"
+      type="primary"
+      icon={<PlusOutlined />}
+      onClick={() => plus(record)}
+    >
+      新建
+    </Button>
+  );
   const detailButton = (record: IRecord) => (
     <Button
       key="detail"
@@ -163,8 +212,8 @@ function AdvancedTable<IRecord extends object = {}>(props: IAdvancedTable<IRecor
     width: 128,
     align: 'center',
     fixed: 'right',
-    hideInSearchTable: false,
     hideInSearchForm: true,
+    hideInSubmitForm: true,
     hideInDetailList: true,
     hideInUpdateForm: true,
     render: (text, record) => ['<detail>', '<update>', '<delete>'],
@@ -183,10 +232,10 @@ function AdvancedTable<IRecord extends object = {}>(props: IAdvancedTable<IRecor
   };
   const columns = userColumns.filter(KEY_NE_OPERATIONS).concat(operations);
 
-  const SearchTableComponent = (
-    <SearchTable<IRecord>
+  const SearchListComponent = (
+    <SearchList<IRecord>
       {...restProps}
-      columns={columns.filter(({ hideInSearchTable }) => !hideInSearchTable)}
+      columns={columns.filter(({ hideInSearchList }) => !hideInSearchList)}
     />
   );
 
@@ -207,7 +256,21 @@ function AdvancedTable<IRecord extends object = {}>(props: IAdvancedTable<IRecor
       {...searchFormProps}
     />
   );
-
+  const SubmitFormComponent = (
+    <SubmitForm<IRecord>
+      form={submitForm}
+      columns={userColumns
+        .filter(({ hideInSubmitForm }) => !hideInSubmitForm)
+        .sort(
+          (
+            { submitFormItemProps: { order: oa = Infinity } = {} as any },
+            { submitFormItemProps: { order: ob = Infinity } = {} as any },
+          ) => oa - ob,
+        )}
+      record={record}
+      {...submitFormProps}
+    />
+  );
   const DetailListComponent = (
     <DetailList<IRecord>
       list={detailList}
@@ -242,21 +305,38 @@ function AdvancedTable<IRecord extends object = {}>(props: IAdvancedTable<IRecor
   return (
     <div className="ant-enhance-advanced-table">
       {searchFormProps && (
-        <Card
-          bordered={false}
-          style={{ marginBottom: 16 }}
-          // bodyStyle={{ paddingBottom: 0 }}
-        >
+        <Card bordered={false} style={{ marginBottom: 16 }} bodyStyle={{ paddingBottom: 0 }}>
           {SearchFormComponent}
         </Card>
       )}
 
-      <Card
-        bordered={false}
-        // bodyStyle={{ paddingTop: 0 }}
-      >
-        {SearchTableComponent}
+      <Card bordered={false} bodyStyle={{ paddingTop: 0 }}>
+        {submitFormProps && <ToolBar actions={[submitButton(record)]} settings={[]} />}
+        {/*
+        <InfoBar />
+        */}
+        {SearchListComponent}
       </Card>
+
+      {wrapperPlusType === 'Drawer' && (
+        <Drawer
+          {...(restWrapperPlus as DrawerProps)}
+          visible={visible.plus}
+          onClose={submitFormCancel as any}
+          footer={
+            <div style={{ textAlign: 'right' }}>
+              <Button type="default" onClick={submitFormCancel} style={{ marginRight: 8 }}>
+                取消
+              </Button>
+              <Button type="primary" onClick={submitFormSubmit} loading={submitting}>
+                提交
+              </Button>
+            </div>
+          }
+        >
+          {SubmitFormComponent}
+        </Drawer>
+      )}
 
       {wrapperViewType === 'Drawer' && (
         <Drawer
@@ -292,6 +372,18 @@ function AdvancedTable<IRecord extends object = {}>(props: IAdvancedTable<IRecor
         </Drawer>
       )}
 
+      {wrapperPlusType === 'Modal' && (
+        <Modal
+          {...(restWrapperPlus as ModalProps)}
+          visible={visible.plus}
+          confirmLoading={submitting}
+          onOk={submitFormSubmit}
+          onCancel={submitFormCancel}
+        >
+          {SubmitFormComponent}
+        </Modal>
+      )}
+
       {wrapperViewType === 'Modal' && (
         <Modal
           {...(restWrapperView as ModalProps)}
@@ -324,5 +416,5 @@ function AdvancedTable<IRecord extends object = {}>(props: IAdvancedTable<IRecor
 }
 
 export default AdvancedTable;
-export { SearchTable, SearchForm, DetailList, UpdateForm, IColumnProps };
-export { ISearchTable, ISearchForm, IDetailList, IUpdateForm } from './typings.d';
+export { SearchList, SearchForm, SubmitForm, DetailList, UpdateForm, IColumnProps };
+export { ISearchList, ISearchForm, ISubmitForm, IDetailList, IUpdateForm } from './typings.d';

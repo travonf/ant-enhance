@@ -1,6 +1,7 @@
 export { default as tag } from './tag';
 export { default as omit } from './omit';
 export { default as delay } from './delay';
+export { default as isFunction } from './is-function';
 export { default as localize } from './localize';
 
 export { default as flatTree } from './flat-tree';

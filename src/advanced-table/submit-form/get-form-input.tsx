@@ -34,7 +34,7 @@ const { Text, Link, Paragraph } = Typography;
  * @param form
  */
 function getInput<T>(DI: any, DE: DataEntry<T>, record: T, form: any) {
-  const dataEntry = typeof DE === 'function' ? DE(record, form!, source.update_form) : DE;
+  const dataEntry = typeof DE === 'function' ? DE(record, form!, source.submit_form) : DE;
   // @ts-ignore
   const { ComponentType, options: opts = [] } = dataEntry;
   const restProps = omit(dataEntry, ['ComponentType']);
