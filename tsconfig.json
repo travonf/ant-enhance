@@ -17,5 +17,6 @@
     "noImplicitAny": false,
     "allowSyntheticDefaultImports": true
   },
+  "include": ["config/**/*", "mock/**/*", "src/**/*", ".eslintrc.js", "typings.d.ts"],
   "exclude": ["node_modules", "es", "lib", "dist", "**/__test__", "test"]
 }

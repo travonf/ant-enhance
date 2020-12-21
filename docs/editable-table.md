@@ -16,6 +16,9 @@
 ### 基本用法
 
 ```jsx
+/**
+ * background: '#f6f7f9'
+ */
 import React from 'react';
 import { Form } from 'antd';
 import { EditableTable } from 'ant-enhance';

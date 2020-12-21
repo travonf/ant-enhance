@@ -29,6 +29,7 @@ const App: React.FC<any> = () => {
   return (
     <div className={styles.wrapper}>
       <Table<IRecord>
+        headerTitle="全功能展示视图"
         wrapper={(record: IRecord) => ({
           plus: {
             type: 'Modal',

@@ -1,15 +1,5 @@
 import React from 'react';
 import { Space, Button } from 'antd';
-/*
-import {
-  PlusOutlined,
-  ReloadOutlined,
-  ColumnHeightOutlined,
-  SettingOutlined,
-  FullscreenExitOutlined,
-  FullscreenOutlined,
-} from '@ant-design/icons';
-*/
 
 const ToolBar: React.FC<Toolbar> = ({ title = '', actions = [], settings = [] }) => {
   return (
@@ -17,7 +7,7 @@ const ToolBar: React.FC<Toolbar> = ({ title = '', actions = [], settings = [] })
       style={{
         display: 'flex',
         justifyContent: 'space-between',
-        padding: '16px 0',
+        marginBottom: 16,
       }}
     >
       <Space
@@ -36,25 +26,13 @@ const ToolBar: React.FC<Toolbar> = ({ title = '', actions = [], settings = [] })
           {title}
         </div>
       </Space>
-      <Space
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-        }}
-      >
+      <Space size={16} align="center">
         <Space size={12} align="center">
           {actions}
         </Space>
-        {/*
         <Space size={12} align="center">
-          <ReloadOutlined />
-          <ColumnHeightOutlined />
-          <SettingOutlined />
-          <FullscreenOutlined />
-          <FullscreenExitOutlined />
+          {settings}
         </Space>
-        */}
       </Space>
     </div>
   );
@@ -70,9 +48,9 @@ interface Toolbar {
   /**
    * 操作
    */
-  actions?: any[];
+  actions?: React.ReactNode[];
   /**
    * 设置
    */
-  settings?: any[];
+  settings?: React.ReactNode[];
 }

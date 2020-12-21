@@ -1,6 +1,6 @@
 <!-- ![ant-enhance](/images/design_components.png) -->
 
-# Ant Enhance
+# 快速开始
 
 ## 安装
 
@@ -15,6 +15,10 @@ $ yarn add ant-enhance
 ## 高级表格
 
 ```jsx
+/**
+ * background: '#f6f7f9'
+ */
+
 import React from 'react';
 import { AdvancedTable } from 'ant-enhance';
 import { ItemOfOption } from 'ant-enhance/es/utils';
@@ -42,10 +46,10 @@ export default () => (
           ComponentType: 'Select',
           options,
         },
-        render: text =>
+        render: (text) =>
           options
             .filter(ItemOfOption(text))
-            .map(item => item.label)
+            .map((item) => item.label)
             .join(', '),
       },
     ]}
@@ -55,6 +59,7 @@ export default () => (
       { key: 3, text: '标题三', select: '3' },
     ]}
     pagination={false}
+    headerTitle="高级表格"
   />
 );
 ```
@@ -68,6 +73,10 @@ export default () => (
 > 高级表格的子组件，可以单独使用
 
 ```jsx
+/**
+ * background: '#f6f7f9'
+ */
+
 import React from 'react';
 import { DetailList } from 'ant-enhance';
 import { ItemOfOption } from 'ant-enhance/es/utils';
@@ -96,10 +105,10 @@ export default () => (
           ComponentType: 'Select',
           options,
         },
-        render: text =>
+        render: (text) =>
           options
             .filter(ItemOfOption(text))
-            .map(item => item.label)
+            .map((item) => item.label)
             .join(', '),
       },
     ]}
@@ -113,6 +122,10 @@ export default () => (
 > 高级表格的子组件，可以单独使用
 
 ```jsx
+/**
+ * background: '#f6f7f9'
+ */
+
 import React from 'react';
 import { UpdateForm } from 'ant-enhance';
 
@@ -141,10 +154,10 @@ export default () => (
           placeholder: '请选择一个选项',
           options,
         },
-        render: text =>
+        render: (text) =>
           options
             .filter(ItemOfOption(text))
-            .map(item => item.label)
+            .map((item) => item.label)
             .join(', '),
       },
     ]}
@@ -158,6 +171,10 @@ export default () => (
 > 可以作为更新表单的扩展输入组件，可以单独使用
 
 ```jsx
+/**
+ * background: '#f6f7f9'
+ */
+
 import React from 'react';
 import { Form } from 'antd';
 import { EditableTable } from 'ant-enhance';

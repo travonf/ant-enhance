@@ -49,7 +49,7 @@ export interface Option {
  * antd中全部输入组件的名称
  * https://ant.design/components/overview-cn/#数据录入
  */
-export type IDataEntry =
+export type IDataEntry<T> =
   /**
    * 排版
    */
@@ -76,7 +76,7 @@ export type IDataEntry =
   | (CascaderProps & { ComponentType: 'Cascader' })
   | (SelectProps<string | number> & { ComponentType: 'Select' })
   | (TreeSelectProps<string | number> & { ComponentType: 'TreeSelect' })
-  | (TransferProps & { ComponentType: 'Transfer' })
+  | (TransferProps<T> & { ComponentType: 'Transfer' })
   /**
    * 日期选择
    */
@@ -93,9 +93,9 @@ export type IDataEntry =
    */
   | { ComponentType: Function; [key: string]: any };
 
-export type DataEntryFn<T> = (record: T, form: FormInstance<T>, source: Source) => IDataEntry;
+export type DataEntryFn<T> = (record: T, form: FormInstance<T>, source: Source) => IDataEntry<T>;
 
-export type DataEntry<T> = IDataEntry | DataEntryFn<T>;
+export type DataEntry<T> = IDataEntry<TextDecodeOptions> | DataEntryFn<T>;
 
 export interface IFormItemProps<T> extends FormItemProps<T> {
   order?: number;
@@ -211,7 +211,24 @@ type Wrapper = {
 };
 type WrapperFn<T> = (record: T) => Wrapper;
 
+export interface Toolbar {
+  reload?: boolean;
+  import?: boolean;
+  export?: boolean;
+  density?: boolean;
+  setting?: boolean;
+  fullscreen?: boolean;
+}
+
 export interface IAdvancedTable<T> extends ISearchList<T> {
+  /**
+   * 工具栏
+   */
+  toolbar?: boolean | Toolbar;
+  /**
+   * 工具栏标题
+   */
+  headerTitle?: React.ReactNode;
   /**
    * 弹出表单的容器
    */
@@ -236,6 +253,12 @@ export interface IAdvancedTable<T> extends ISearchList<T> {
    * 更新表单属性
    */
   updateForm?: FormProps<T>;
+
+  /**
+   * 导入导出操作
+   */
+  onImport?: Function;
+  onExport?: Function;
 
   /**
    * 检索数据

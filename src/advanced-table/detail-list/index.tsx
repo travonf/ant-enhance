@@ -29,7 +29,7 @@ function DetailList<IRecord extends object = {}>(props: IDetailList<IRecord>) {
       <ListItem
         key={title as any}
         label={title}
-        className="ant-enhance-advanced-table-detail-list-item"
+        className="detail-list-item"
         {...detailListItemProps}
       >
         {getValue(dataIndex, dataEntry, record, list, render)}
