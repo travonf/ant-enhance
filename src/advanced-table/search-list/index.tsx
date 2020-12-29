@@ -2,7 +2,7 @@ import React from 'react';
 import { Table } from 'antd';
 import { ISearchList } from '../typings';
 
-function SearchTable<IRecord extends object = {}>(props: ISearchList<IRecord>) {
+function SearchList<IRecord extends object = {}>(props: ISearchList<IRecord>) {
   const { columns = [], ...restProps } = props;
 
   return (
@@ -12,4 +12,4 @@ function SearchTable<IRecord extends object = {}>(props: ISearchList<IRecord>) {
   );
 }
 
-export default SearchTable;
+export default SearchList;

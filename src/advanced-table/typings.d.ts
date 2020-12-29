@@ -204,11 +204,13 @@ export interface IUpdateForm<T> extends FormProps<T> {
 }
 
 type WrapperWithType = ({ type: 'Drawer' } & DrawerProps) | ({ type: 'Modal' } & ModalProps);
+
 type Wrapper = {
   plus?: WrapperWithType;
   view?: WrapperWithType;
   edit?: WrapperWithType;
 };
+
 type WrapperFn<T> = (record: T) => Wrapper;
 
 export interface Toolbar {
@@ -225,10 +227,12 @@ export interface IAdvancedTable<T> extends ISearchList<T> {
    * 工具栏
    */
   toolbar?: boolean | Toolbar;
+
   /**
    * 工具栏标题
    */
   headerTitle?: React.ReactNode;
+
   /**
    * 弹出表单的容器
    */
@@ -255,9 +259,13 @@ export interface IAdvancedTable<T> extends ISearchList<T> {
   updateForm?: FormProps<T>;
 
   /**
-   * 导入导出操作
+   * 导入操作
    */
   onImport?: Function;
+
+  /**
+   * 导出操作
+   */
   onExport?: Function;
 
   /**
