@@ -62,6 +62,9 @@ function AdvancedTable<IRecord extends Record<string, any>>(props: IAdvancedTabl
   } = props;
 
   const searchListRef = useRef<HTMLDivElement>(null);
+
+  const mountContainer = searchListRef?.current || document.body;
+
   const fullscreen = useFullscreen();
 
   const showToolbar = toolbar !== false;
@@ -351,7 +354,7 @@ function AdvancedTable<IRecord extends Record<string, any>>(props: IAdvancedTabl
         placement="bottomRight"
         overlayClassName="toolbar-column-setter-popover"
         trigger="click"
-        // title="title"
+        getPopupContainer={() => mountContainer}
         content={<ColumnSetting columns={col} onColumnsChange={setCol} />}
       >
         <SettingOutlined title="设置" />
@@ -506,6 +509,7 @@ function AdvancedTable<IRecord extends Record<string, any>>(props: IAdvancedTabl
 
       {wrapperPlusType === 'Drawer' && (
         <Drawer
+          getContainer={mountContainer}
           {...(restWrapperPlus as DrawerProps)}
           visible={visible.plus}
           onClose={submitFormCancel as any}
@@ -526,6 +530,7 @@ function AdvancedTable<IRecord extends Record<string, any>>(props: IAdvancedTabl
 
       {wrapperViewType === 'Drawer' && (
         <Drawer
+          getContainer={mountContainer}
           {...(restWrapperView as DrawerProps)}
           visible={visible.view}
           onClose={(e) => {
@@ -540,6 +545,7 @@ function AdvancedTable<IRecord extends Record<string, any>>(props: IAdvancedTabl
 
       {wrapperEditType === 'Drawer' && (
         <Drawer
+          getContainer={mountContainer}
           {...(restWrapperEdit as DrawerProps)}
           visible={visible.edit}
           onClose={updateFormCancel as any}
@@ -560,6 +566,7 @@ function AdvancedTable<IRecord extends Record<string, any>>(props: IAdvancedTabl
 
       {wrapperPlusType === 'Modal' && (
         <Modal
+          getContainer={mountContainer}
           {...(restWrapperPlus as ModalProps)}
           visible={visible.plus}
           confirmLoading={submitting}
@@ -572,6 +579,7 @@ function AdvancedTable<IRecord extends Record<string, any>>(props: IAdvancedTabl
 
       {wrapperViewType === 'Modal' && (
         <Modal
+          getContainer={mountContainer}
           {...(restWrapperView as ModalProps)}
           visible={visible.view}
           // confirmLoading={submitting}
@@ -588,6 +596,7 @@ function AdvancedTable<IRecord extends Record<string, any>>(props: IAdvancedTabl
 
       {wrapperEditType === 'Modal' && (
         <Modal
+          getContainer={mountContainer}
           {...(restWrapperEdit as ModalProps)}
           visible={visible.edit}
           confirmLoading={submitting}
