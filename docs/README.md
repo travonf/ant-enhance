@@ -1,3 +1,7 @@
+---
+order: 1
+---
+
 <!-- ![ant-enhance](/images/design_components.png) -->
 
 # 快速开始
@@ -36,4 +40,4 @@ $ yarn add ant-enhance -S
 
 <code src="../example/quick-start/EditableTable.tsx" title="编辑表格" desc="可以作为更新表单的扩展输入组件，可以单独使用"/>
 
-<API src="../src/advanced-table/index.tsx"></API>
+<!-- <API src="../src/advanced-table/index.tsx"></API> -->

@@ -14,7 +14,20 @@ export default () => (
     /**
      * 扩展属性
      */
-    headerTitle="高级表格"
+    toolbar={{
+      title: '高级表格',
+      actions: ['自定义组件'],
+      settings: {
+        reload: true,
+        density: true,
+        import: true,
+        export: true,
+        setting: true,
+        fullscreen: true,
+      },
+    }}
+    onWrapperShow={console.log}
+    onWrapperHide={console.log}
     detailList={{
       column: 2,
     }}

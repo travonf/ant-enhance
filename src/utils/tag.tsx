@@ -8,6 +8,8 @@ interface Option {
 }
 
 function tag(item: Option) {
+  if (!item) return null;
+
   const { label, value, color } = item;
 
   return (

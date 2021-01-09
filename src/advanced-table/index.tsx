@@ -35,28 +35,21 @@ import {
 
 import './index.less';
 
-function AdvancedTable<IRecord extends Record<string, unknown>>(props: IAdvancedTable<IRecord>) {
+function AdvancedTable<IRecord extends Record<string, any>>(props: IAdvancedTable<IRecord>) {
   const {
-    toolbar = {
-      reload: true,
-      density: false,
-      import: false,
-      export: false,
-      setting: true,
-      fullscreen: true,
-    },
-
-    headerTitle = '',
+    toolbar,
 
     wrapper = {},
+    onWrapperShow,
+    onWrapperHide,
 
     searchForm: searchFormProps,
     submitForm: submitFormProps,
     detailList: detailListProps,
     updateForm: updateFormProps,
 
-    onImport = () => window?.alert?.('You need to provide the onImport method!!!'),
-    onExport = () => window?.alert?.('You need to provide the onExport method!!!'),
+    onImport = () => window?.alert?.('You need to provide the onImport method!'),
+    onExport = () => window?.alert?.('You need to provide the onExport method!'),
     onSearch = console.debug,
     onSubmit = console.debug,
     onDetail = console.debug,
@@ -114,11 +107,13 @@ function AdvancedTable<IRecord extends Record<string, unknown>>(props: IAdvanced
   /**
    * 控制模态框/抽屉的显隐
    */
-  const show = (type: keyof typeof initialVisible) => {
+  const show = (type: keyof typeof initialVisible, record: IRecord) => {
+    onWrapperShow?.(type, record);
     setVisible({ ...visible, [type]: true });
   };
 
-  const hide = (type: keyof typeof initialVisible) => {
+  const hide = (type: keyof typeof initialVisible, record: IRecord) => {
+    onWrapperHide?.(type, record);
     setVisible({ ...visible, [type]: false });
     setRecord(initialRecord);
   };
@@ -128,17 +123,17 @@ function AdvancedTable<IRecord extends Record<string, unknown>>(props: IAdvanced
    */
   const plus = (record: IRecord) => {
     setRecord(record);
-    show('plus');
+    show('plus', record);
   };
 
   const view = (record: IRecord) => {
     setRecord(record);
-    show('view');
+    show('view', record);
   };
 
   const edit = (record: IRecord) => {
     setRecord(record);
-    show('edit');
+    show('edit', record);
   };
 
   const del = (record: IRecord) => {
@@ -172,7 +167,7 @@ function AdvancedTable<IRecord extends Record<string, unknown>>(props: IAdvanced
       const values = await submitForm.validateFields();
       await onSubmit?.(localize(values) as IRecord);
       await delay(300);
-      hide('plus');
+      hide('plus', record);
     } catch (errors) {
       console.error(errors);
     } finally {
@@ -182,7 +177,7 @@ function AdvancedTable<IRecord extends Record<string, unknown>>(props: IAdvanced
   const submitFormCancel = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     // console.log(e.target);
     e.preventDefault();
-    hide('plus');
+    hide('plus', record);
   };
 
   /**
@@ -195,7 +190,7 @@ function AdvancedTable<IRecord extends Record<string, unknown>>(props: IAdvanced
       const values = await updateForm.validateFields();
       await onUpdate?.(localize(values) as IRecord);
       await delay(300);
-      hide('edit');
+      hide('edit', record);
     } catch (errors) {
       console.error(errors);
     } finally {
@@ -205,7 +200,7 @@ function AdvancedTable<IRecord extends Record<string, unknown>>(props: IAdvanced
   const updateFormCancel = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     // console.log(e.target);
     e.preventDefault();
-    hide('edit');
+    hide('edit', record);
   };
 
   /**
@@ -385,7 +380,30 @@ function AdvancedTable<IRecord extends Record<string, unknown>>(props: IAdvanced
     ),
   };
 
-  const settings = Object.keys(toolbar).map((key) => (toolbar[key] ? $settings[key] : null));
+  /**
+   * 禁用
+   * toolbar={false}
+   * 只显示标题
+   * toolbar={ {title: 'Header'} }
+   * 不显示actions
+   * toolbar={ {actions: []} }
+   * 控制settings
+   * toolbar={ {settings: {reload: false}} }
+   */
+  const {
+    title: toolbarTitle,
+    actions,
+    settings = {
+      reload: true,
+      density: false,
+      import: false,
+      export: false,
+      setting: true,
+      fullscreen: true,
+    },
+  } = toolbar || {};
+  const toolbarActions = actions ? actions.concat(submitButton(record)) : [];
+  const toolbarSettings = Object.keys(settings).map((key) => settings[key] && $settings[key]);
 
   /**
    * 检索列表
@@ -472,7 +490,12 @@ function AdvancedTable<IRecord extends Record<string, unknown>>(props: IAdvanced
           }}
         >
           {showToolbar && (
-            <ToolBar title={headerTitle} actions={[submitButton(record)]} settings={settings} />
+            <ToolBar
+              // disabled
+              title={toolbarTitle}
+              actions={toolbarActions}
+              settings={toolbarSettings}
+            />
           )}
           {/*
           <InfoBar />
@@ -507,7 +530,7 @@ function AdvancedTable<IRecord extends Record<string, unknown>>(props: IAdvanced
           visible={visible.view}
           onClose={(e) => {
             e.preventDefault();
-            hide('view');
+            hide('view', record);
           }}
           footer={null}
         >
@@ -555,7 +578,7 @@ function AdvancedTable<IRecord extends Record<string, unknown>>(props: IAdvanced
           onOk={undefined}
           onCancel={(e) => {
             e.preventDefault();
-            hide('view');
+            hide('view', record);
           }}
           footer={null}
         >

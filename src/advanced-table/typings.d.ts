@@ -33,7 +33,7 @@ type Source = ValueOf<typeof source>;
 export type RecursivePartial<T> = {
   [P in keyof T]?: T[P] extends (infer U)[]
     ? RecursivePartial<U>[]
-    : T[P] extends object
+    : T[P] extends Record<string, any>
     ? RecursivePartial<T[P]>
     : T[P];
 };
@@ -214,29 +214,41 @@ type Wrapper = {
 type WrapperFn<T> = (record: T) => Wrapper;
 
 export interface Toolbar {
-  reload?: boolean;
-  import?: boolean;
-  export?: boolean;
-  density?: boolean;
-  setting?: boolean;
-  fullscreen?: boolean;
+  /**
+   * 工具栏标题
+   */
+  title?: React.ReactNode;
+  actions?: false | any[];
+  settings?: {
+    reload?: boolean;
+    import?: boolean;
+    export?: boolean;
+    density?: boolean;
+    setting?: boolean;
+    fullscreen?: boolean;
+  };
 }
 
 export interface IAdvancedTable<T> extends ISearchList<T> {
   /**
    * 工具栏
    */
-  toolbar?: boolean | Toolbar;
-
-  /**
-   * 工具栏标题
-   */
-  headerTitle?: React.ReactNode;
+  toolbar?: false | Toolbar;
 
   /**
    * 弹出表单的容器
    */
   wrapper?: Wrapper | WrapperFn<T>;
+
+  /**
+   * 弹框显示回调
+   */
+  onWrapperShow: (type: 'plus' | 'view' | 'edit', record: T) => void;
+
+  /**
+   * 弹框隐藏回调
+   */
+  onWrapperHide: (type: 'plus' | 'view' | 'edit', record: T) => void;
 
   /**
    * 检索表单属性
