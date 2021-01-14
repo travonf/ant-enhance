@@ -243,12 +243,12 @@ export interface IAdvancedTable<T> extends ISearchList<T> {
   /**
    * 弹框显示回调
    */
-  onWrapperShow: (type: 'plus' | 'view' | 'edit', record: T) => void;
+  onWrapperShow?: (type: 'plus' | 'view' | 'edit', record: T) => void;
 
   /**
    * 弹框隐藏回调
    */
-  onWrapperHide: (type: 'plus' | 'view' | 'edit', record: T) => void;
+  onWrapperHide?: (type: 'plus' | 'view' | 'edit', record: T) => void;
 
   /**
    * 检索表单属性

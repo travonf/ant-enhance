@@ -23,6 +23,7 @@ export default [
     dataIndex: 'select',
     dataEntry: {
       ComponentType: 'Select',
+      placeholder: '选择一个选项',
       options,
     },
     render: (text) =>
@@ -69,6 +70,7 @@ export default [
     dataIndex: 'date',
     dataEntry: {
       ComponentType: 'DatePicker',
+      placeholder: '选择一个日期',
       style: { width: '100%' },
     },
     render: (text: string) => moment(text).format('YYYY-MM-DD'),

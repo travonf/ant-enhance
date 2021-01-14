@@ -1,11 +1,11 @@
 import React, { useRef, useState } from 'react';
-import { Card, Drawer, Modal, Form, Button, Popconfirm, Popover } from 'antd';
+import { Card, Drawer, Modal, Form, Button, Popconfirm, Popover, Tooltip } from 'antd';
 import { DrawerProps } from 'antd/es/drawer';
 import { ModalProps } from 'antd/es/modal';
 import {
   PlusOutlined,
-  ReadOutlined,
-  EditOutlined,
+  ProfileOutlined,
+  FormOutlined,
   DeleteOutlined,
   ReloadOutlined,
   ImportOutlined,
@@ -213,7 +213,7 @@ function AdvancedTable<IRecord extends Record<string, any>>(props: IAdvancedTabl
     <Button
       key="submit"
       title="新建"
-      type="primary"
+      type="default"
       icon={<PlusOutlined />}
       onClick={() => plus(record)}
     >
@@ -221,39 +221,45 @@ function AdvancedTable<IRecord extends Record<string, any>>(props: IAdvancedTabl
     </Button>
   );
   const detailButton = (record: IRecord) => (
-    <Button
-      key="detail"
-      title="详情"
-      type="link"
-      icon={<ReadOutlined />}
-      onClick={() => view(record)}
-    />
+    <Tooltip key="detail" title="详情" getPopupContainer={() => mountContainer}>
+      <Button
+        key="detail"
+        title="详情"
+        type="link"
+        icon={<ProfileOutlined />}
+        onClick={() => view(record)}
+      />
+    </Tooltip>
   );
   const updateButton = (record: IRecord) => (
-    <Button
-      key="update"
-      title="编辑"
-      type="link"
-      icon={<EditOutlined />}
-      onClick={() => edit(record)}
-    />
+    <Tooltip key="update" title="编辑" getPopupContainer={() => mountContainer}>
+      <Button
+        key="update"
+        title="编辑"
+        type="link"
+        icon={<FormOutlined />}
+        onClick={() => edit(record)}
+      />
+    </Tooltip>
   );
   const deleteButton = (record: IRecord) => (
-    <Popconfirm
-      key="delete"
-      title="确定删除吗？"
-      okText="确定"
-      cancelText="取消"
-      onConfirm={() => del(record)}
-    >
-      <Button
-        // key="delete"
-        title="删除"
-        type="link"
-        icon={<DeleteOutlined />}
-        // onClick={() => del(record)}
-      />
-    </Popconfirm>
+    <Tooltip key="delete" title="删除" getPopupContainer={() => mountContainer}>
+      <Popconfirm
+        key="delete"
+        title="确定删除吗？"
+        okText="确定"
+        cancelText="取消"
+        onConfirm={() => del(record)}
+      >
+        <Button
+          // key="delete"
+          title="删除"
+          type="link"
+          icon={<DeleteOutlined />}
+          // onClick={() => del(record)}
+        />
+      </Popconfirm>
+    </Tooltip>
   );
   const itemToAction = (record: IRecord) => (item: any) => {
     if (item === '<detail>') return detailButton(record);
@@ -308,78 +314,94 @@ function AdvancedTable<IRecord extends Record<string, any>>(props: IAdvancedTabl
      * 刷新数据
      */
     reload: (
-      <ReloadOutlined
-        key="reload"
-        title="刷新"
-        onClick={() => {
-          onSearch?.();
-        }}
-      />
+      <Tooltip key="reload" title="刷新" getPopupContainer={() => mountContainer}>
+        <ReloadOutlined
+          key="reload"
+          title="刷新"
+          onClick={() => {
+            onSearch?.();
+          }}
+        />
+      </Tooltip>
     ),
 
     /**
      * 导入导出
      */
     import: (
-      <ImportOutlined
-        key="import"
-        title="导入"
-        onClick={() => {
-          onImport();
-        }}
-      />
+      <Tooltip key="import" title="导入" getPopupContainer={() => mountContainer}>
+        <ImportOutlined
+          key="import"
+          title="导入"
+          onClick={() => {
+            onImport();
+          }}
+        />
+      </Tooltip>
     ),
     export: (
-      <ExportOutlined
-        key="export"
-        title="导出"
-        onClick={() => {
-          onExport();
-        }}
-      />
+      <Tooltip key="export" title="导出" getPopupContainer={() => mountContainer}>
+        <ExportOutlined
+          key="export"
+          title="导出"
+          onClick={() => {
+            onExport();
+          }}
+        />
+      </Tooltip>
     ),
 
     /**
      * 行距设置
      */
-    density: <ColumnHeightOutlined key="density" title="行距" onClick={console.log} />,
+    density: (
+      <Tooltip key="density" title="行距" getPopupContainer={() => mountContainer}>
+        <ColumnHeightOutlined key="density" title="行距" onClick={console.log} />
+      </Tooltip>
+    ),
 
     /**
      * 列序设置
      */
     setting: (
-      <Popover
-        key="setting"
-        arrowPointAtCenter
-        placement="bottomRight"
-        overlayClassName="toolbar-column-setter-popover"
-        trigger="click"
-        getPopupContainer={() => mountContainer}
-        content={<ColumnSetting columns={col} onColumnsChange={setCol} />}
-      >
-        <SettingOutlined title="设置" />
-      </Popover>
+      <Tooltip key="setting" title="设置" getPopupContainer={() => mountContainer}>
+        <Popover
+          key="setting"
+          arrowPointAtCenter
+          placement="bottomRight"
+          overlayClassName="toolbar-column-setter-popover"
+          trigger="click"
+          getPopupContainer={() => mountContainer}
+          content={<ColumnSetting columns={col} onColumnsChange={setCol} />}
+        >
+          <SettingOutlined title="设置" />
+        </Popover>
+      </Tooltip>
     ),
 
     /**
      * 全屏设置
      */
     fullscreen: !fullscreen ? (
-      <FullscreenOutlined
-        key="fullscreen"
-        title="全屏"
-        onClick={() => {
-          searchListRef.current?.requestFullscreen();
-        }}
-      />
+      <Tooltip key="fullscreen" title="进入全屏" getPopupContainer={() => mountContainer}>
+        <FullscreenOutlined
+          key="fullscreen"
+          title="全屏"
+          onClick={() => {
+            searchListRef.current?.requestFullscreen();
+          }}
+        />
+      </Tooltip>
     ) : (
-      <FullscreenExitOutlined
-        key="fullscreenexit"
-        title="全屏"
-        onClick={() => {
-          document.exitFullscreen();
-        }}
-      />
+      <Tooltip key="fullscreenexit" title="退出全屏" getPopupContainer={() => mountContainer}>
+        <FullscreenExitOutlined
+          key="fullscreenexit"
+          title="全屏"
+          onClick={() => {
+            document.exitFullscreen();
+          }}
+        />
+      </Tooltip>
     ),
   };
 

@@ -2,24 +2,24 @@ export const searchFormDefaultLayout = {
   col: {
     xs: 0x18, // 屏幕 < 576px  微型尺寸
     sm: 0x18, // 屏幕 ≥ 576px  小型尺寸
-    md: 0x18, // 屏幕 ≥ 768px  中型尺寸
+    md: 0x0c, // 屏幕 ≥ 768px  中型尺寸
     lg: 0x0c, // 屏幕 ≥ 992px  大型尺寸
     xl: 0x08, // 屏幕 ≥ 1200px 超大尺寸
   },
   formItem: {
     labelCol: {
-      // xs: { span: 0x18 },
-      sm: { span: 0x08 },
-      md: { span: 0x08 },
-      lg: { span: 0x08 },
-      xl: { span: 0x08 },
+      xs: { span: 0x06 },
+      sm: { span: 0x06 },
+      md: { span: 0x06 },
+      lg: { span: 0x06 },
+      xl: { span: 0x06 },
     },
     wrapperCol: {
-      // xs: { span: 0x18 },
-      sm: { span: 0x12 },
-      md: { span: 0x12 },
-      lg: { span: 0x12 },
-      xl: { span: 0x12 },
+      xs: { span: 0x10 },
+      sm: { span: 0x10 },
+      md: { span: 0x10 },
+      lg: { span: 0x10 },
+      xl: { span: 0x10 },
     },
   },
 };

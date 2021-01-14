@@ -1,6 +1,6 @@
 import React from 'react';
-import { Row, Col, Form, Button } from 'antd';
-import { UpOutlined, DownOutlined } from '@ant-design/icons';
+import { Row, Col, Space, Form, Button } from 'antd';
+import { SearchOutlined, UndoOutlined, UpOutlined, DownOutlined } from '@ant-design/icons';
 import getInput from './get-form-input';
 import { defaultLayout } from '../layouts';
 import { defaultDataEntry } from '../profile';
@@ -63,35 +63,71 @@ function SearchForm<IRecord extends object = {}>(props: ISearchForm<IRecord>) {
     );
   };
 
+  /**
+   * ButtonGroup Render
+   */
+  const renderButtonGroup = (
+    <>
+      <Col>
+        <Button
+          // disabled
+          type="primary"
+          size="middle"
+          icon={<SearchOutlined />}
+          htmlType="submit"
+          loading={retrieving}
+        >
+          搜索
+        </Button>
+      </Col>
+
+      <Col>
+        <Button
+          // disabled
+          type="default"
+          size="middle"
+          icon={<UndoOutlined />}
+          htmlType="reset"
+          onClick={() => form?.resetFields()}
+        >
+          重置
+        </Button>
+      </Col>
+
+      {columns.length > defaultExpandCount && (
+        <Col>
+          <Button
+            type="dashed"
+            size="middle"
+            icon={expand ? <UpOutlined /> : <DownOutlined />}
+            onClick={() => {
+              setExpand(!expand);
+            }}
+          >
+            更多
+          </Button>
+        </Col>
+      )}
+    </>
+  );
+
+  /**
+   * 检索表单布局
+   */
+  const searchLayout = { xs: 0x18, sm: 0x0e, md: 0x0e, lg: 0x0f, xl: 0x10, xxl: 0x12 };
+  const buttonLayout = { xs: 0x18, sm: 0x0a, md: 0x0a, lg: 0x09, xl: 0x08, xxl: 0x06 };
+
   return (
     <Form form={form} name="search-form" {...restProps}>
       <Row gutter={0x08}>
-        <Col md={0x18} lg={0x10} xl={0x12} xxl={0x13}>
-          <Row gutter={0x08}>{columns.map(renderFormItem)}</Row>
+        <Col {...searchLayout}>
+          <Row gutter={0x08} justify="start" align="middle">
+            {columns.map(renderFormItem)}
+          </Row>
         </Col>
-        <Col md={0x18} lg={0x08} xl={0x06} xxl={0x05}>
-          <Row gutter={0x08} justify="center" align="middle">
-            <Col>
-              <Button type="primary" htmlType="submit" loading={retrieving}>
-                搜索
-              </Button>
-            </Col>
-            <Col>
-              <Button type="default" htmlType="reset" onClick={() => form?.resetFields()}>
-                重置
-              </Button>
-            </Col>
-            <Col>
-              <Button
-                type="dashed"
-                icon={expand ? <UpOutlined /> : <DownOutlined />}
-                onClick={() => {
-                  setExpand(!expand);
-                }}
-              >
-                更多
-              </Button>
-            </Col>
+        <Col {...buttonLayout}>
+          <Row gutter={[0x08, 0x08]} justify="end" align="middle">
+            {renderButtonGroup}
           </Row>
         </Col>
       </Row>
