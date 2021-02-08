@@ -10,7 +10,7 @@ export const defaultDataEntry: DataEntry<any> = {
   disabled: true,
 };
 
-function DetailList<IRecord extends object = {}>(props: IDetailList<IRecord>) {
+function DetailList<IRecord extends Record<string, any>>(props: IDetailList<IRecord>) {
   const { list, columns = [], record = {} as IRecord, ...restProps } = props;
 
   const renderListItem = (column: IColumnProps<IRecord>) => {
@@ -56,4 +56,4 @@ function DetailList<IRecord extends object = {}>(props: IDetailList<IRecord>) {
   );
 }
 
-export default DetailList;
+export default React.memo(DetailList);

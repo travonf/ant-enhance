@@ -312,25 +312,25 @@ export interface IAdvancedTable<T> extends ISearchList<T> {
   /**
    * 检索数据
    */
-  onSearch?: (record: T) => void;
+  onSearch?: (record?: T) => Promise<void>;
 
   /**
    * 录入数据
    */
-  onSubmit?: (record: T) => void;
+  onSubmit?: (record: T) => Promise<void>;
 
   /**
    * 获取详情
    */
-  onDetail?: (record: T) => void;
+  onDetail?: (record: T) => Promise<void>;
 
   /**
    * 更新数据
    */
-  onUpdate?: (record: T) => void;
+  onUpdate?: (record: T) => Promise<void>;
 
   /**
    * 删除数据
    */
-  onDelete?: (record: T) => void;
+  onDelete?: (record: T) => Promise<void>;
 }

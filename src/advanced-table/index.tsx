@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo } from 'react';
+import React, { useRef, useState, useMemo, useCallback } from 'react';
 import { Card, Drawer, Modal, Form, Button, Popconfirm, Popover, Tooltip } from 'antd';
 import { DrawerProps } from 'antd/es/drawer';
 import { ModalProps } from 'antd/es/modal';
@@ -15,7 +15,7 @@ import {
   FullscreenExitOutlined,
   FullscreenOutlined,
 } from '@ant-design/icons';
-import { useFullscreen } from '../hooks';
+import { List, useFullscreen } from '../hooks';
 import { delay, localize } from '../utils';
 import { InfoBar, ToolBar, ColumnSetting } from './component';
 import SearchList from './search-list';
@@ -23,8 +23,9 @@ import SearchForm from './search-form';
 import SubmitForm from './submit-form';
 import DetailList from './detail-list';
 import UpdateForm from './update-form';
-import { IAdvancedTable } from './typings';
+import { wrapperType } from './profile';
 import {
+  IAdvancedTable,
   IColumnProps,
   ISearchList,
   ISearchForm,
@@ -50,11 +51,12 @@ function AdvancedTable<IRecord extends Record<string, any>>(props: IAdvancedTabl
 
     onImport = () => window?.alert?.('You need to provide the onImport method!'),
     onExport = () => window?.alert?.('You need to provide the onExport method!'),
-    onSearch = console.debug,
-    onSubmit = console.debug,
-    onDetail = console.debug,
-    onUpdate = console.debug,
-    onDelete = console.debug,
+
+    onSearch,
+    onSubmit,
+    onDetail,
+    onUpdate,
+    onDelete,
 
     columns: userColumns = [],
 
@@ -83,7 +85,7 @@ function AdvancedTable<IRecord extends Record<string, any>>(props: IAdvancedTabl
    */
   const [searchForm] = Form.useForm();
   const [submitForm] = Form.useForm();
-  const [detailList] = [{ getFieldValue: (key: string) => record[key], resetFields: () => {} }];
+  const [detailList] = List.useList();
   const [updateForm] = Form.useForm();
 
   /**
@@ -91,17 +93,17 @@ function AdvancedTable<IRecord extends Record<string, any>>(props: IAdvancedTabl
    */
   const {
     plus: { type: wrapperPlusType, ...restWrapperPlus } = {
-      type: 'Drawer',
+      type: wrapperType.Drawer,
       title: '新建',
       width: '80vw',
     },
     view: { type: wrapperViewType, ...restWrapperView } = {
-      type: 'Drawer',
+      type: wrapperType.Drawer,
       title: '详情',
       width: '80vw',
     },
     edit: { type: wrapperEditType, ...restWrapperEdit } = {
-      type: 'Drawer',
+      type: wrapperType.Drawer,
       title: '更新',
       width: '60vw',
     },
@@ -124,41 +126,46 @@ function AdvancedTable<IRecord extends Record<string, any>>(props: IAdvancedTabl
   /**
    * crud容器快捷操作
    */
-  const plus = (record: IRecord) => {
+  const plus = async (record: IRecord) => {
     setRecord(record);
     show('plus', record);
   };
 
-  const view = (record: IRecord) => {
-    setRecord(record);
-    show('view', record);
+  const view = async (record: IRecord) => {
+    const resp = await onDetail?.(record);
+    setRecord(resp || record);
+    show('view', resp || record);
   };
 
-  const edit = (record: IRecord) => {
-    setRecord(record);
-    show('edit', record);
+  const edit = async (record: IRecord) => {
+    const resp = await onDetail?.(record);
+    setRecord(resp || record);
+    show('edit', resp || record);
   };
 
-  const del = (record: IRecord) => {
+  const del = async (record: IRecord) => {
     onDelete?.(record);
   };
 
   /**
    * 检索表单搜索与重置操作
    */
-  const searchFormSearch = async (values: IRecord) => {
-    // e.preventDefault();
-    try {
-      setRetrieving(true);
-      // const values = await searchForm.validateFields();
-      await onSearch?.(localize(values as any) as IRecord);
-      await delay(300);
-    } catch (errors) {
-      console.error(errors);
-    } finally {
-      setRetrieving(false);
-    }
-  };
+  const searchFormSearch = useCallback(
+    async (values: IRecord) => {
+      // e.preventDefault();
+      try {
+        setRetrieving(true);
+        // const values = await searchForm.validateFields();
+        await onSearch?.(localize(values as any) as IRecord);
+        await delay(300);
+      } catch (errors) {
+        console.error(errors);
+      } finally {
+        setRetrieving(false);
+      }
+    },
+    [onSearch],
+  );
 
   /**
    * 录入表单提交与取消操作
@@ -334,7 +341,7 @@ function AdvancedTable<IRecord extends Record<string, any>>(props: IAdvancedTabl
           key="import"
           title="导入"
           onClick={() => {
-            onImport();
+            onImport?.();
           }}
         />
       </Tooltip>
@@ -345,7 +352,7 @@ function AdvancedTable<IRecord extends Record<string, any>>(props: IAdvancedTabl
           key="export"
           title="导出"
           onClick={() => {
-            onExport();
+            onExport?.();
           }}
         />
       </Tooltip>
@@ -544,7 +551,7 @@ function AdvancedTable<IRecord extends Record<string, any>>(props: IAdvancedTabl
         </Card>
       </div>
 
-      {wrapperPlusType === 'Drawer' && (
+      {wrapperPlusType === wrapperType.Drawer && (
         <Drawer
           getContainer={mountContainer}
           {...(restWrapperPlus as DrawerProps)}
@@ -565,7 +572,7 @@ function AdvancedTable<IRecord extends Record<string, any>>(props: IAdvancedTabl
         </Drawer>
       )}
 
-      {wrapperViewType === 'Drawer' && (
+      {wrapperViewType === wrapperType.Drawer && (
         <Drawer
           getContainer={mountContainer}
           {...(restWrapperView as DrawerProps)}
@@ -580,7 +587,7 @@ function AdvancedTable<IRecord extends Record<string, any>>(props: IAdvancedTabl
         </Drawer>
       )}
 
-      {wrapperEditType === 'Drawer' && (
+      {wrapperEditType === wrapperType.Drawer && (
         <Drawer
           getContainer={mountContainer}
           {...(restWrapperEdit as DrawerProps)}
@@ -601,7 +608,7 @@ function AdvancedTable<IRecord extends Record<string, any>>(props: IAdvancedTabl
         </Drawer>
       )}
 
-      {wrapperPlusType === 'Modal' && (
+      {wrapperPlusType === wrapperType.Modal && (
         <Modal
           getContainer={mountContainer}
           {...(restWrapperPlus as ModalProps)}
@@ -614,7 +621,7 @@ function AdvancedTable<IRecord extends Record<string, any>>(props: IAdvancedTabl
         </Modal>
       )}
 
-      {wrapperViewType === 'Modal' && (
+      {wrapperViewType === wrapperType.Modal && (
         <Modal
           getContainer={mountContainer}
           {...(restWrapperView as ModalProps)}
@@ -631,7 +638,7 @@ function AdvancedTable<IRecord extends Record<string, any>>(props: IAdvancedTabl
         </Modal>
       )}
 
-      {wrapperEditType === 'Modal' && (
+      {wrapperEditType === wrapperType.Modal && (
         <Modal
           getContainer={mountContainer}
           {...(restWrapperEdit as ModalProps)}

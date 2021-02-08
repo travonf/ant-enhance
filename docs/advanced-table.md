@@ -28,6 +28,10 @@ order: 2
 
 <code src="../example/advanced-table/Basic.tsx" title="基本用法" />
 
+### 字段嵌套
+
+<code src="../example/advanced-table/NestedFields.tsx" title="字段嵌套" />
+
 ### 表单容器
 
 <code src="../example/advanced-table/Wrapper.tsx" title="表单容器" />

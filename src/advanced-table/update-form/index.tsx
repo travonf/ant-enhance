@@ -1,4 +1,5 @@
 import React from 'react';
+import { assocPath } from 'ramda';
 import { Row, Col, Form } from 'antd';
 import { omit } from '../../utils';
 import getInput from './get-form-input';
@@ -9,7 +10,7 @@ import { IUpdateForm, IColumnProps } from '../typings';
 
 const FormItem = Form.Item;
 
-function UpdateForm<IRecord extends object = {}>(props: IUpdateForm<IRecord>) {
+function UpdateForm<IRecord extends Record<string, any>>(props: IUpdateForm<IRecord>) {
   const {
     form,
     columns = [],
@@ -17,23 +18,22 @@ function UpdateForm<IRecord extends object = {}>(props: IUpdateForm<IRecord>) {
     //
     ...restProps
   } = props;
-  const [, forceUpdate] = React.useState<object>();
+  const [, forceUpdate] = React.useState<any>();
 
   React.useEffect(() => {
-    const keys = Object.keys(form?.getFieldsValue() || {});
-    const values = {} as any;
-    function setValue({ dataIndex, dataEntry = defaultDataEntry }: any) {
-      if (dataIndex && keys.includes(dataIndex))
-        values[dataIndex] = getValue<IRecord>(dataIndex, dataEntry, record, form);
-    }
-    columns.forEach(setValue);
+    let values = {} as any;
+    columns.forEach(({ dataIndex, dataEntry = defaultDataEntry }) => {
+      const path: any = Array.isArray(dataIndex) ? dataIndex : [dataIndex];
+      const result = getValue<IRecord>(dataIndex, dataEntry, record, form);
+      values = assocPath<any, any>(path)(result)(values);
+    });
     form?.setFieldsValue(values);
     forceUpdate({});
 
     return () => {
       form?.resetFields();
     };
-  }, [record]);
+  }, [form, columns, record]);
 
   /**
    * FormItem Render

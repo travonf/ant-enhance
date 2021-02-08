@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import { __, compose, find, join, map } from 'ramda';
+import { __, compose, find, join, map, path } from 'ramda';
 import { Rate, Slider, Switch, Typography } from 'antd';
 import { PaperClipOutlined } from '@ant-design/icons';
 import flatTree from '../../utils/flat-tree';
@@ -30,7 +30,9 @@ function getValue<T>(
   list: any,
   render: any = JSON.stringify,
 ) {
-  const dataValue = record[DI];
+  const dataValue = path<any>(Array.isArray(DI) ? DI : [DI])(record);
+  console.log(dataValue);
+
   if (typeof dataValue === 'undefined') return null;
 
   const dataEntry = typeof DE === 'function' ? DE(record, list!, source.detail_list) : DE;
@@ -81,35 +83,28 @@ function getValue<T>(
     case 'Slider':
       return <Slider value={dataValue} {...(restProps as any)} />;
 
-    // find =
     case 'Radio':
-      // return [dataValue].map(item => options.find(ItemOfOption(item))).map(tag);
-      return compose(
-        map(tag),
-        map(compose(find(__ as any, options) as any, ItemOfOption)),
-      )([dataValue]);
+      return compose(map(tag), map(compose(find<any>(__, options), ItemOfOption)))([dataValue]);
     case 'Checkbox':
-      // return dataValue.map(item => options.find(ItemOfOption(item))).map(tag);
-      return compose(
-        map(tag),
-        map(compose(find(__ as any, options) as any, ItemOfOption)),
-      )(dataValue);
+      return compose(map(tag), map(compose(find<any>(__, options), ItemOfOption)))(dataValue);
     case 'Cascader':
-      return dataValue.map(item => flatTree(options).find(ItemOfOption(item) as any)).map(tag);
+      return dataValue.map((item) => flatTree(options).find(ItemOfOption(item) as any)).map(tag);
+
     case 'Select':
       // 单选
+      if ((restProps as any).mode !== 'multiple') {
+        return dataValue;
+      }
       // 多选
-      if ((restProps as any).mode === 'multiple')
-        return dataValue.map(item => options.find(ItemOfOption(item))).map(tag);
-      return dataValue;
+      return compose(map(tag), map(compose(find<any>(__, options), ItemOfOption)))(dataValue);
     case 'TreeSelect':
       return dataValue
-        .map(item => flatTree((restProps as any).treeData).find(ItemOfOption(item) as any))
+        .map((item) => flatTree((restProps as any).treeData).find(ItemOfOption(item) as any))
         .map(ItemToOption('title', 'value'))
         .map(tag);
     case 'Transfer':
       return dataValue
-        .map(item => (restProps as any).dataSource.find(ItemOfOption(item, 'key')))
+        .map((item) => (restProps as any).dataSource.find(ItemOfOption(item, 'key')))
         .map(ItemToOption('title', 'key'))
         .map(tag);
     /**

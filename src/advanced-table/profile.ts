@@ -11,3 +11,8 @@ export const defaultDataEntry: DataEntry<any> = {
   ComponentType: 'Input',
   disabled: true,
 };
+
+export const wrapperType = {
+  Drawer: 'Drawer',
+  Modal: 'Modal',
+};

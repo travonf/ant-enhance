@@ -8,7 +8,7 @@ import { ISearchForm, IColumnProps } from '../typings';
 
 const FormItem = Form.Item;
 
-function SearchForm<IRecord extends object = {}>(props: ISearchForm<IRecord>) {
+function SearchForm<IRecord extends Record<string, any>>(props: ISearchForm<IRecord>) {
   const {
     form,
     columns = [],

@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import { __, compose, find, join, map } from 'ramda';
+import { __, compose, find, join, map, path } from 'ramda';
 import { source } from '../profile';
 import { DataEntry } from '../typings';
 
@@ -12,7 +12,7 @@ import { DataEntry } from '../typings';
  * @param form
  */
 function getValue<T>(DI: any, DE: DataEntry<T>, record: T, form: any) {
-  const dataValue = record[DI];
+  const dataValue = path<any>(Array.isArray(DI) ? DI : [DI])(record);
   const dataEntry = typeof DE === 'function' ? DE(record, form!, source.update_form) : DE;
   switch (dataEntry.ComponentType) {
     /**
