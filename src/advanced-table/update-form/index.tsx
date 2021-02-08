@@ -93,4 +93,4 @@ function UpdateForm<IRecord extends object = {}>(props: IUpdateForm<IRecord>) {
   );
 }
 
-export default UpdateForm;
+export default React.memo(UpdateForm);

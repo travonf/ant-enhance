@@ -93,4 +93,4 @@ function SubmitForm<IRecord extends object = {}>(props: ISubmitForm<IRecord>) {
   );
 }
 
-export default SubmitForm;
+export default React.memo(SubmitForm);

@@ -135,4 +135,4 @@ function SearchForm<IRecord extends object = {}>(props: ISearchForm<IRecord>) {
   );
 }
 
-export default SearchForm;
+export default React.memo(SearchForm);

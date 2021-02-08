@@ -8,7 +8,7 @@ import { AutoCompleteProps } from 'antd/es/auto-complete';
 import { SwitchProps } from 'antd/es/switch';
 import { RateProps } from 'antd/es/rate';
 import { SliderSingleProps, SliderRangeProps } from 'antd/es/slider';
-import { RadioProps } from 'antd/es/radio';
+import { RadioGroupProps } from 'antd/es/radio';
 import { CheckboxProps } from 'antd/es/checkbox';
 import { CascaderProps } from 'antd/es/cascader';
 import { SelectProps } from 'antd/es/select';
@@ -45,6 +45,35 @@ export interface Option {
   color?: string;
 }
 
+type TextPropsWithType = { ComponentType: 'Text' } & TextProps;
+type LinkPropsWithType = { ComponentType: 'Link' } & LinkProps;
+type ParagraphPropsWithType = { ComponentType: 'Paragraph' } & ParagraphProps;
+
+type InputPropsWithType = { ComponentType: 'Input' } & InputProps;
+type TextAreaPropsWithType = { ComponentType: 'Input.TextArea' } & TextAreaProps;
+type InputNumberPropsWithType = { ComponentType: 'InputNumber' } & InputNumberProps;
+type MentionPropsWithType = { ComponentType: 'Mentions' } & MentionProps;
+type AutoCompletePropsWithType = { ComponentType: 'AutoComplete' } & AutoCompleteProps;
+
+type SwitchPropsWithType = { ComponentType: 'Switch' } & SwitchProps;
+type RatePropsWithType = { ComponentType: 'Rate' } & RateProps;
+type SliderSinglePropsWithType = { ComponentType: 'Slider' } & SliderSingleProps;
+type SliderRangePropsWithType = { ComponentType: 'Slider' } & SliderRangeProps;
+type RadioPropsWithType = { ComponentType: 'Radio' } & RadioGroupProps;
+type CheckboxPropsWithType = { ComponentType: 'Checkbox' } & CheckboxProps;
+type CascaderPropsWithType = { ComponentType: 'Cascader' } & CascaderProps;
+type SelectPropsWithType = { ComponentType: 'Select' } & SelectProps<string | number>;
+type TreeSelectPropsWithType = { ComponentType: 'TreeSelect' } & TreeSelectProps<string | number>;
+type TransferPropsWithType<T> = { ComponentType: 'Transfer' } & TransferProps<T>;
+
+type DatePickerPropsWithType = { ComponentType: 'DatePicker' } & DatePickerProps;
+type TimePickerPropsWithType = { ComponentType: 'TimePicker' } & TimePickerProps;
+type RangePickerPropsWithType = { ComponentType: 'RangePicker' } & RangePickerProps;
+
+type UploadPropsWithType = { ComponentType: 'Upload' } & UploadProps;
+type DraggerPropsWithType = { ComponentType: 'Upload.Dragger' } & DraggerProps;
+
+type ComponentPropsWithType = { ComponentType: Function; [key: string]: any };
 /**
  * antd中全部输入组件的名称
  * https://ant.design/components/overview-cn/#数据录入
@@ -53,49 +82,49 @@ export type IDataEntry<T> =
   /**
    * 排版
    */
-  | (TextProps & { ComponentType: 'Text' })
-  | (LinkProps & { ComponentType: 'Link' })
-  | (ParagraphProps & { ComponentType: 'Paragraph' })
+  | TextPropsWithType
+  | LinkPropsWithType
+  | ParagraphPropsWithType
   /**
    * 输入
    */
-  | (InputProps & { ComponentType: 'Input' })
-  | (TextAreaProps & { ComponentType: 'Input.TextArea' })
-  | (InputNumberProps & { ComponentType: 'InputNumber' })
-  | (MentionProps & { ComponentType: 'Mentions' })
-  | (AutoCompleteProps & { ComponentType: 'AutoComplete' })
+  | InputPropsWithType
+  | TextAreaPropsWithType
+  | InputNumberPropsWithType
+  | MentionPropsWithType
+  | AutoCompletePropsWithType
   /**
    * 选择
    */
-  | (SwitchProps & { ComponentType: 'Switch' })
-  | (RateProps & { ComponentType: 'Rate' })
-  | (SliderSingleProps & { ComponentType: 'Slider' })
-  | (SliderRangeProps & { ComponentType: 'Slider' })
-  | (RadioProps & { ComponentType: 'Radio' })
-  | (CheckboxProps & { ComponentType: 'Checkbox' })
-  | (CascaderProps & { ComponentType: 'Cascader' })
-  | (SelectProps<string | number> & { ComponentType: 'Select' })
-  | (TreeSelectProps<string | number> & { ComponentType: 'TreeSelect' })
-  | (TransferProps<T> & { ComponentType: 'Transfer' })
+  | SwitchPropsWithType
+  | RatePropsWithType
+  | SliderSinglePropsWithType
+  | SliderRangePropsWithType
+  | RadioPropsWithType
+  | CheckboxPropsWithType
+  | CascaderPropsWithType
+  | SelectPropsWithType
+  | TreeSelectPropsWithType
+  | TransferPropsWithType<T>
   /**
    * 日期选择
    */
-  | (DatePickerProps & { ComponentType: 'DatePicker' })
-  | (TimePickerProps & { ComponentType: 'TimePicker' })
-  | (RangePickerProps & { ComponentType: 'RangePicker' })
+  | DatePickerPropsWithType
+  | TimePickerPropsWithType
+  | RangePickerPropsWithType
   /**
    * 上传文件
    */
-  | (UploadProps & { ComponentType: 'Upload' })
-  | (DraggerProps & { ComponentType: 'Upload.Dragger' })
+  | UploadPropsWithType
+  | DraggerPropsWithType
   /**
    * 自定义组件
    */
-  | { ComponentType: Function; [key: string]: any };
+  | ComponentPropsWithType;
 
 export type DataEntryFn<T> = (record: T, form: FormInstance<T>, source: Source) => IDataEntry<T>;
 
-export type DataEntry<T> = IDataEntry<TextDecodeOptions> | DataEntryFn<T>;
+export type DataEntry<T> = IDataEntry<T> | DataEntryFn<T>;
 
 export interface IFormItemProps<T> extends FormItemProps<T> {
   order?: number;

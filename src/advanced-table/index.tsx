@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useMemo } from 'react';
 import { Card, Drawer, Modal, Form, Button, Popconfirm, Popover, Tooltip } from 'antd';
 import { DrawerProps } from 'antd/es/drawer';
 import { ModalProps } from 'antd/es/modal';
@@ -433,70 +433,85 @@ function AdvancedTable<IRecord extends Record<string, any>>(props: IAdvancedTabl
   /**
    * 检索列表
    */
-  const SearchListComponent = (
-    <SearchList<IRecord>
-      {...restProps}
-      // columns={columns.filter(({ hideInSearchList }) => !hideInSearchList)}
-      columns={col.filter(({ hideInSearchList }) => !hideInSearchList)}
-    />
+  const SearchListComponent = useMemo(
+    () => (
+      <SearchList<IRecord>
+        {...restProps}
+        // columns={columns.filter(({ hideInSearchList }) => !hideInSearchList)}
+        columns={col.filter(({ hideInSearchList }) => !hideInSearchList)}
+      />
+    ),
+    [col, restProps],
   );
 
   /**
    * 检索表单
    */
-  const SearchFormComponent = (
-    <SearchForm<IRecord>
-      form={searchForm}
-      columns={userColumns
-        .filter(({ hideInSearchForm }) => !hideInSearchForm)
-        .sort(order('searchFormItemProps'))}
-      record={record}
-      retrieving={retrieving}
-      onFinish={searchFormSearch}
-      {...searchFormProps}
-    />
+  const SearchFormComponent = useMemo(
+    () => (
+      <SearchForm<IRecord>
+        form={searchForm}
+        columns={userColumns
+          .filter(({ hideInSearchForm }) => !hideInSearchForm)
+          .sort(order('searchFormItemProps'))}
+        record={record}
+        retrieving={retrieving}
+        onFinish={searchFormSearch}
+        {...searchFormProps}
+      />
+    ),
+    [record, retrieving, searchForm, searchFormProps, searchFormSearch, userColumns],
   );
 
   /**
    * 录入表单
    */
-  const SubmitFormComponent = (
-    <SubmitForm<IRecord>
-      form={submitForm}
-      columns={userColumns
-        .filter(({ hideInSubmitForm }) => !hideInSubmitForm)
-        .sort(order('submitFormItemProps'))}
-      record={record}
-      {...submitFormProps}
-    />
+  const SubmitFormComponent = useMemo(
+    () => (
+      <SubmitForm<IRecord>
+        form={submitForm}
+        columns={userColumns
+          .filter(({ hideInSubmitForm }) => !hideInSubmitForm)
+          .sort(order('submitFormItemProps'))}
+        record={record}
+        {...submitFormProps}
+      />
+    ),
+    [record, submitForm, submitFormProps, userColumns],
   );
 
   /**
    * 详情列表
    */
-  const DetailListComponent = (
-    <DetailList<IRecord>
-      list={detailList}
-      columns={userColumns
-        .filter(({ hideInDetailList }) => !hideInDetailList)
-        .sort(order('detailListItemProps'))}
-      record={record}
-      {...detailListProps}
-    />
+  const DetailListComponent = useMemo(
+    () => (
+      <DetailList<IRecord>
+        list={detailList}
+        columns={userColumns
+          .filter(({ hideInDetailList }) => !hideInDetailList)
+          .sort(order('detailListItemProps'))}
+        record={record}
+        {...detailListProps}
+      />
+    ),
+    [detailList, detailListProps, record, userColumns],
   );
 
   /**
    * 更新表单
    */
-  const UpdateFormComponent = (
-    <UpdateForm<IRecord>
-      form={updateForm}
-      columns={userColumns
-        .filter(({ hideInUpdateForm }) => !hideInUpdateForm)
-        .sort(order('updateFormItemProps'))}
-      record={record}
-      {...updateFormProps}
-    />
+  const UpdateFormComponent = useMemo(
+    () => (
+      <UpdateForm<IRecord>
+        form={updateForm}
+        columns={userColumns
+          .filter(({ hideInUpdateForm }) => !hideInUpdateForm)
+          .sort(order('updateFormItemProps'))}
+        record={record}
+        {...updateFormProps}
+      />
+    ),
+    [record, updateForm, updateFormProps, userColumns],
   );
 
   return (
@@ -632,7 +647,7 @@ function AdvancedTable<IRecord extends Record<string, any>>(props: IAdvancedTabl
   );
 }
 
-export default AdvancedTable;
+export default React.memo(AdvancedTable);
 export { SearchList, SearchForm, SubmitForm, DetailList, UpdateForm };
 export type { IColumnProps, ISearchList, ISearchForm, ISubmitForm, IDetailList, IUpdateForm };
 
