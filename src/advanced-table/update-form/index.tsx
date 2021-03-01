@@ -93,4 +93,4 @@ function UpdateForm<IRecord extends Record<string, any>>(props: IUpdateForm<IRec
   );
 }
 
-export default React.memo(UpdateForm);
+export default UpdateForm;

@@ -135,4 +135,4 @@ function SearchForm<IRecord extends Record<string, any>>(props: ISearchForm<IRec
   );
 }
 
-export default React.memo(SearchForm);
+export default SearchForm;

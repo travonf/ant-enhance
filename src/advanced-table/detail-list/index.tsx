@@ -56,4 +56,4 @@ function DetailList<IRecord extends Record<string, any>>(props: IDetailList<IRec
   );
 }
 
-export default React.memo(DetailList);
+export default DetailList;

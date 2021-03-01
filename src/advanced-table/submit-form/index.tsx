@@ -93,4 +93,4 @@ function SubmitForm<IRecord extends Record<string, any>>(props: ISubmitForm<IRec
   );
 }
 
-export default React.memo(SubmitForm);
+export default SubmitForm;
