@@ -31,7 +31,6 @@ function getValue<T>(
   render: any = JSON.stringify,
 ) {
   const dataValue = path<any>(Array.isArray(DI) ? DI : [DI])(record);
-  console.log(dataValue);
 
   if (typeof dataValue === 'undefined') return null;
 
@@ -84,9 +83,15 @@ function getValue<T>(
       return <Slider value={dataValue} {...(restProps as any)} />;
 
     case 'Radio':
-      return compose(map(tag), map(compose(find<any>(__, options), ItemOfOption)))([dataValue]);
+      return compose(
+        map(tag),
+        map(compose(find<any>(__ as any, options), ItemOfOption)),
+      )([dataValue]);
     case 'Checkbox':
-      return compose(map(tag), map(compose(find<any>(__, options), ItemOfOption)))(dataValue);
+      return compose(
+        map(tag),
+        map(compose(find<any>(__ as any, options), ItemOfOption)),
+      )(dataValue);
     case 'Cascader':
       return dataValue.map((item) => flatTree(options).find(ItemOfOption(item) as any)).map(tag);
 
@@ -96,7 +101,10 @@ function getValue<T>(
         return dataValue;
       }
       // 多选
-      return compose(map(tag), map(compose(find<any>(__, options), ItemOfOption)))(dataValue);
+      return compose(
+        map(tag),
+        map(compose(find<any>(__ as any, options), ItemOfOption)),
+      )(dataValue);
     case 'TreeSelect':
       return dataValue
         .map((item) => flatTree((restProps as any).treeData).find(ItemOfOption(item) as any))
